@@ -1,0 +1,550 @@
+﻿1	ACCESS_KEY	Tecla de Acceso	3
+2	ACCESS_KEY_STRID	ID Cadena de Tecla de Acceso	2
+3	ALERT	Alert Object	4
+4	ALIAS	Alias	3
+5	ALLOW_EXPANSION	Permitir Ampliación	1
+6	ALLOW_MLT_LIN_PRMPTS	Permitir Prompts de Varias Líneas	1
+7	ALLOW_STRT_ATT_PRMPTS	Permitir Prompts Incorporados Iniciales	1
+8	ALLOW_TOP_ATT_PRMPTS	Permitir Prompts Incorporados Superiores	1
+9	ALT_MSG	Mensaje	3
+10	ALT_MSG_STRID	ID Cadena de Mensaje	2
+11	ALT_STY	Estilo de Alerta	2
+12	ARROW_STY	Estilo de Flecha	2
+13	ASSOC_MENUS_COUNT	Recuento de los Menús Asociados	2
+14	ASSOC_MNUS	Menús Asociados	4
+15	ATT_LIB	Attached Library	4
+16	AUDIO_CHNNLS	Canales de Audio	2
+17	AUTO_COL_WID	Ancho de Columna Automático	1
+18	AUTO_DISP	Visualización Automática	1
+19	AUTO_HINT	Visualizar Indicación Automáticamente	1
+20	AUTO_POS	Posición Automática	1
+21	AUTO_QRY	Consulta Automática	1
+22	AUTO_RFRSH	Refrescamiento Automático	1
+23	AUTO_SKP	Salto Automático	1
+24	AUTO_SLCT	Selección Automática	1
+25	BACK_COLOR	Color del Fondo	3
+26	BEVEL	Bisel	2
+27	BLK_DESCRIPTION	Descripción del Bloque de Datos	3
+28	BLK_DSCRP_STRID	ID Cadena de Descripción de Bloque de Datos	2
+29	BLOCK	Data Block Object	4
+30	BOUNDING_BX_SCALABLE	Recuadro Delimitador Escalable	1
+31	BTM_TTL	Título Inferior	3
+32	BTM_TTL_STRID	ID Cadena de Título Inferior	2
+33	BTN_1_LBL	Etiqueta de Botón 1	3
+34	BTN_1_LBL_STRID	ID Cadena de Etiqueta de Botón 1	2
+35	BTN_2_LBL	Etiqueta de Botón 2	3
+36	BTN_2_LBL_STRID	ID Cadena de Etiqueta de Botón 2	2
+37	BTN_3_LBL	Etiqueta de Botón 3	3
+38	BTN_3_LBL_STRID	ID Cadena de Etiqueta de Botón 3	2
+39	CALC_MODE	Modo de Cálculo	2
+40	CANVAS	Canvas Object	4
+41	CAP_STY	Estilo del Extremo	2
+42	CASE_INSENSITIVE_QRY	Consulta sin diferenciación de mayúsculas/minúsculas	1
+43	CASE_RSTRCTION	Restricción Mayúsculas/Minúsculas	2
+44	CHAR_CELL_HGT	Altura de Celda de Caracteres	2
+45	CHAR_CELL_WID	Ancho de Celda de Caracteres	2
+46	CHKED_VAL	Valor si está Comprobado	3
+47	CHK_BX_OTHER_VALS	Correspondencia de Casilla de Control de Otros Valores	2
+48	CLIENT_INFO	Case Info	0
+49	CLIP_HGT	Altura del Clip	2
+50	CLIP_WID	Ancho del Clip	2
+51	CLIP_X_POS	Posición X en el Clip	2
+52	CLIP_Y_POS	Posición Y en el Clip	2
+53	CLOSED	Cerrado	1
+54	CLS_ALLOWED	Cierre Permitido	1
+55	CMPRSSION_QLTY	Calidad de Compresión	2
+56	CMPTXT	Compound Text Object	4
+57	CNV_NAM	Lienzo	3
+58	CNV_OBJ	Canvas Object Pointer	4
+59	CNV_TYP	Tipo de Lienzo	2
+60	COL_DAT_TYP	Tipo de Dato de Columna	2
+61	COL_MAP	Column Mapping Object	4
+62	COL_NAM	Nombre de Columna	3
+63	COL_SPEC	Column Specification Object	4
+64	COL_VALS_COUNT	Recuento de elementos de datos de la columna	2
+65	COMMENT	Comentarios	3
+66	COMM_MODE	Modo de Comunicación	2
+67	COMPRESS	Comprimir	2
+68	COM_TXT	Texto de Comando	3
+69	COM_TYP	Tipo de Comando	2
+70	CONCEAL_DATA	Ocultar Datos	1
+71	CONSOLE_WIN	Ventana de Consola	3
+72	COORD_SYS	Sistema de Coordernadas	2
+73	COPY_VAL_FROM_ITM	Copiar Valor desde Elemento	3
+74	CORNER_RADIUS_X	Radio del Angulo X	2
+75	CORNER_RADIUS_Y	Radio del Angulo Y	2
+76	CRSR_MODE	Modo de Cursor	2
+77	CSTM_SPCING	Espaciado Personalizado	2
+78	DASH_STY	Estilo de Guión	2
+79	DAT_SRC_BLK	Bloque de Datos de Origen de Datos	3
+80	DAT_SRC_X_AXS	Eje X de Origen de Datos	3
+81	DAT_SRC_Y_AXS	Eje Y de Origen de Datos	3
+82	DAT_TYP	Tipo de Dato	2
+83	DB_BLK	Bloque de Datos de Base de Datos	1
+84	DB_ITM	Elemento de Base de Datos	1
+85	DEFERRED	Aplazado	1
+86	DEFER_REQ_ENF	Diferir Aplicación Obligatoria	1
+87	DEL_ALLOWED	Borrado Permitido	1
+88	DEL_DAT_SRC_ARG	Delete Argument Object	4
+89	DEL_DAT_SRC_COL	Delete Column Object	4
+90	DEL_PROC_NAM	Borrar Nombre del Procedimiento	3
+91	DEL_REC	Borrar Comportamiento del Registro	2
+92	DETAIL_BLK	Bloque de Datos Detalle	3
+93	DETAIL_ITEMREF	Elemento de Referencia Detalle	3
+94	DFLT_ALT_BTN	Botón de Alerta Por Defecto	2
+95	DFLT_BTN	Botón Por Defecto	1
+96	DFLT_FNT_SCALING	Escala de la Fuente Por Defecto	1
+97	DIRTY_INFO	<null>	1
+98	DISP_IN_KBRD_HLP	Visualizar en 'Ayuda del Teclado'	1
+99	DISP_NO_PRIV	Visualizar sin Privilegio	1
+100	DISP_QLTY	Calidad de Visualización	2
+101	DISP_WID	Ancho de Visualización	2
+102	DIST_BTWN_RECS	Distancia Entre Registros	2
+103	DITHER	Vacilación	1
+104	DML_ARY_SIZ	Tamaño del Vector DML	2
+105	DML_DAT_NAM	Nombre Destino de Datos DML	3
+106	DML_DAT_TYP	Tipo Destino de Datos DML	2
+107	DML_RET_VAL	Valor de Retorno DML	1
+108	DSA_MODE	Modo de Argumento	2
+109	DSA_NAM	Nombre de Argumento	3
+110	DSA_TYP	Tipo de Argumento	2
+111	DSA_TYP_NAM	Nombre de Tipo de Argumento	3
+112	DSA_VAL	Valor del Argumento	3
+113	DSC_LEN	Longitud	2
+114	DSC_MANDATORY	Obligatorio	1
+115	DSC_NAM	Nombre de Columna	3
+116	DSC_NOCHILDREN	<null>	1
+117	DSC_PARENT_NAME	Columna Padre	3
+118	DSC_PRECISION	Precisión	2
+119	DSC_SCALE	Escala	2
+120	DSC_TYP	Tipo de Columna	2
+121	DSC_TYPE_NAME	Nombre de Tipo de Columna	3
+122	DS_DEL_ARG_LIST	Borrar Argumentos del Procedimiento	4
+123	DS_DEL_COL_LIST	Borrar Columnas del Juego de Resultados del Procedimiento	4
+124	DS_INS_ARG_LIST	Insertar Argumentos de Procedimiento	4
+125	DS_INS_COL_LIST	Insertar Columnas del Juego de Resultados del Procedimiento	4
+126	DS_LOK_ARG_LIST	Bloquear Argumentos del Procedimiento	4
+127	DS_LOK_COL_LIST	Bloquear Columnas del Juego de Resultados del Procedimiento	4
+128	DS_QRY_ARG_LIST	Argumentos de Origen de Datos de Consulta	4
+129	DS_QRY_COL_LIST	Columnas Origen de Datos de Consulta	4
+130	DS_UPD_ARG_LIST	Actualizar Argumentos del Procedimiento	4
+131	DS_UPD_COL_LIST	Actualizar Columnas del Juego de Resultados del Procedimiento	4
+132	EDGE_BACK_COLOR	Color del Fondo del Borde	3
+133	EDGE_FORE_COLOR	Color del Borde del Primer Plano	3
+134	EDGE_PAT	Trama del Borde	3
+135	EDITOR	Editor Object	4
+136	EDT_NAM	Editor	3
+137	EDT_OBJ	Editor Object Pointer	4
+138	EDT_X_POS	Posición X en el Editor	2
+139	EDT_Y_POS	Posición Y en el Editor	2
+140	ENABLED	Activado	1
+141	ENFRC_COL_SECURITY	Aplicar Seguridad de Columna	1
+142	ENFRC_PRMRY_KEY	Forzar Clave Primaria	1
+143	EXEC_HIERARCHY	Jerarquía de Ejecución	2
+144	EXEC_MODE	Modo de Ejecución	2
+145	FAIL_MSG_STRID	ID Cadena de Mensaje de Error	2
+146	FILL_PAT	Trama de Relleno	3
+147	FIRE_IN_QRY	Activar en Modo Introducir Consulta	1
+148	FIXED_BOUNDING_BX	Recuadro Delimitador Fijo	1
+149	FIXED_LEN	Longitud Fija	1
+150	FLNAM	Nombre de Fichero	3
+151	FLTR_BEFORE_DISP	Filtrar antes de Visualizar	1
+152	FMT_MSK	Máscara de Formato	3
+153	FONT_NAM	Nombre de la Fuente	3
+154	FONT_SCALEABLE	Fuente Escalable	1
+155	FONT_SIZ	Tamaño de la Fuente	2
+156	FONT_SPCING	Espaciado de la Fuente	2
+157	FONT_STY	Estilo de la Fuente	2
+158	FONT_WGHT	Grosor de la Fuente	2
+159	FORE_COLOR	Color del Primer Plano	3
+160	FORMULA	Fórmula	3
+161	FORM_PARAM	Form Parameter Object	4
+162	FRAME_ALIGN	Alineamiento del Marco	2
+163	FRAME_TTL	Título del Marco	3
+164	FRAME_TTL_ALIGN	Alineamiento del Título del Marco	2
+165	FRAME_TTL_BACK_COLOR	Color del Fondo del Título del Marco	3
+166	FRAME_TTL_FILL_PAT	Trama de Relleno del Título del Marco	3
+167	FRAME_TTL_FONT_NAM	Nombre de la Fuente del Título del Marco	3
+168	FRAME_TTL_FONT_SIZ	Tamaño de la Fuente del Título del Marco	2
+169	FRAME_TTL_FONT_SPCING	Espaciado de la Fuente del Título del Marco	2
+170	FRAME_TTL_FONT_STY	Estilo de la Fuente del Título del Marco	2
+171	FRAME_TTL_FONT_WGHT	Grosor de la Fuente del Título del Marco	2
+172	FRAME_TTL_FORE_COLOR	Color del Primer Plano del Título del Marco	3
+173	FRAME_TTL_OFST	Desplazamiento del Título del Marco	2
+174	FRAME_TTL_SPCING	Espaciado del Título del Marco	2
+175	FRAME_TTL_STRID	ID Cadena de Título de Marco	2
+176	FRAME_TTL_VAT_NAM	Grupo de Atributos Visuales del Título del Marco	3
+177	FRAME_TTL_VAT_OBJ	Title VA Object	4
+178	FRST_NAVIGATION_BLK_NAM	Primer Bloque de Datos de Navegación	3
+179	FRST_NAVIGATION_BLK_OBJ	First Data Block Object	4
+180	GRAPHIC	Boilerplate Object	4
+181	GRAPHICS_TYP	Tipo de Gráficos	2
+182	GRA_FONT_COLOR	<null>	3
+183	GRA_FONT_COLOR_CODE	<null>	2
+184	GRA_FONT_NAM	Nombre de Fuente de Objeto Gráfico	3
+185	GRA_FONT_SIZ	Tamaño de Fuente de Objeto Gráfico	2
+186	GRA_FONT_SPCING	Graphic Font Spacing	2
+187	GRA_FONT_STY	Estilo de Fuente de Objeto Gráfico	2
+188	GRA_FONT_WGHT	Graphic Font Weight	2
+189	GRA_TEXT	Texto de Objeto Gráfico	3
+190	HEIGHT	Altura	2
+191	HELP_BOOK_TITLE	Título del Libro de Ayuda	3
+192	HELP_BOOK_TOPIC	Tema del Libro de Ayuda	3
+193	HIDE	Hide Object	1
+194	HIDE_ON_EXIT	Ocultar al Salir	1
+195	HIGHEST_ALLOWED_VAL	Valor Máximo Permitido	3
+196	HIGHEST_VAL_STRID	ID Cadena de Valor Superior	2
+197	HINT	Indicación	3
+198	HINT_STRID	ID Cadena de Indicación	2
+199	HLP_DESCRIPTION	Descripción de la Ayuda	3
+200	HLP_DSCRP_STRID	ID Cadena de Descripción de Ayuda	2
+201	HORZ_JST	Justificación Horizontal	2
+202	HORZ_MARGN	Margen Horizontal	2
+203	HORZ_OBJ_OFST	Desplazamiento del Objeto Horizontal	2
+204	HORZ_ORGN	Origen Horizontal	2
+205	HORZ_TLBR_CNV	Lienzo de la Barra de Herramientas Horizontal de la Pantalla	3
+206	HTB_CNV_NAME	Lienzo de Barra de Herramientas Horizontal	3
+207	ICONIC	Icónico	1
+208	ICON_FLNAM	Nombre de Fichero del Icono	3
+209	ICON_IN_MNU	Icono del Menú	1
+210	IMG_DPTH	Fondo de Imagen	2
+211	IMG_FMT	Formato de Imagen	2
+212	IMPL_CLASS	Clase de Implementación	3
+213	INCLUDE_REFITEM	Incluir Elemento REF	1
+214	INHRT_MNU	Heredar Menú	1
+215	INIT_KBRD_DIR	Estado Inicial del Teclado	2
+216	INIT_MNU	Menú Inicial	3
+217	INIT_VAL	Valor Inicial	3
+218	INIT_VAL_STRID	ID Cadena de Valor Inicial de Elemento	2
+219	INSRT_ALLOWED	Inserción Permitida	1
+220	INSRT_PROC_NAM	Insertar Nombre del Procedimiento	3
+221	INS_DAT_SRC_ARG	Insert Argument Object	4
+222	INS_DAT_SRC_COL	Insert Column Object	4
+223	INTERACTION_MODE	Modo de Interacción	2
+224	INTERNAL_END_ANGLE	Angulo Final	2
+225	INTERNAL_LIN_WID	Ancho de Línea	2
+226	INTERNAL_ROTATION_ANGLE	Angulo de Rotación	2
+227	INTERNAL_STRT_ANGLE	Angulo Inicial	2
+228	ISOLATION_MODE	Modo de Aislamiento	2
+229	ITEM	Item Object	4
+230	ITMS_DISP	Número de Elementos Visualizados	2
+231	ITM_TYP	Tipo de Elemento	2
+232	JOIN_COND	Condición de Unión	3
+233	JOIN_STY	Estilo de la Unión	2
+234	JUSTIFICATION	Justificación	2
+235	KBRD_ACC	Tecla de Función	3
+236	KBRD_ACC_STRID	ID Cadena de Tecla de Función de Teclado	2
+237	KBRD_HLP_TXT	Texto de la Ayuda del Teclado'	3
+238	KBRD_HLP_TXT_STRID	ID Cadena de Texto para 'Ayuda de Teclado'	2
+239	KBRD_NAVIGABLE	Teclado de Navegación	1
+240	KBRD_STATE	Estado del Teclado	2
+241	KEEP_CRSR_POS	Mantener la Posición del Cursor	1
+242	KEY_MODE	Modo de Teclas	2
+243	LABEL	Etiqueta	3
+244	LABEL_STRID	ID Cadena de Etiqueta	2
+245	LANG	Language Object	4
+246	LANG_DIR	Dirección	2
+247	LAYOUT_DATA_BLK_NAM	Bloque de Datos de Diseño	3
+248	LAYOUT_STY	Estilo de Diseño	2
+249	LIB_LOC	Ubicación de la Biblioteca PL/SQL	3
+250	LIB_PROG_UNIT	<null>	4
+251	LIB_SRC	Origen de la Biblioteca PL/SQL	2
+252	LIN_SPCING	Espaciado de Línea	2
+253	LIST_ELEM	List Element Object	0
+254	LOCK_DAT_SRC_ARG	Lock Argument Object	4
+255	LOCK_DAT_SRC_COL	Lock Column Object	4
+256	LOCK_MODE	Modo de Bloqueo	2
+257	LOCK_PROC_NAM	Bloquear Nombre del Procedimiento	3
+258	LOCK_REC	Bloquear Registro	1
+259	LOV	LOV Object	4
+260	LOV_NAM	Lista de Valores	3
+261	LOV_OBJ	LOV Object Pointer	4
+262	LOV_X_POS	Posición X en la Lista	2
+263	LOV_Y_POS	Posición Y en la Lista	2
+264	LOWEST_ALLOWED_VAL	Valor Mínimo Permitido	3
+265	LOWEST_VAL_STRID	ID Cadena de Valor Inferior	2
+266	LST_ELEMENT_COUNT	Recuento de la Lista de Elementos	2
+267	LST_IN_BLK_MNU	Listado en Menú de Bloques de Datos	1
+268	LST_STY	Estilo de la Lista	2
+269	LST_TYP	Tipo de Lista	2
+270	MAGIC_ITM	Elemento Mágico	2
+271	MAIN_MNU	Menú Principal	3
+272	MAXIMIZE_ALLOWED	Maximización Permitida	1
+273	MAX_LEN	Longitud Máxima	2
+274	MAX_OBJS	Máximo de Objetos por Línea	2
+275	MAX_QRY_TIME	Tiempo de Consulta Máximo	2
+276	MAX_RECS_FETCHED	Máximo de Registros Buscados	2
+277	MENU	Menu Object	4
+278	MINIMIZE_ALLOWED	Minimización Permitida	1
+279	MINIMIZE_TTL	Título Minimizado	3
+280	MINIMIZE_TTL_STRID	ID Cadena de Título de Icono	2
+281	MLT_LIN	Varias Líneas	1
+282	MNU_DRCTRY	Directorio de Menús	3
+283	MNU_FLNAM	Nombre de Fichero de Menús	3
+284	MNU_ITM	Menu Item Object	4
+285	MNU_ITM_CODE	Código de Elemento de Menú	3
+286	MNU_ITM_RAD_GRP	Grupo de Botones de Radio de Elemento de Menú	3
+287	MNU_ITM_TYP	Tipo de Elemento de Menú	2
+288	MNU_MOD	Módulo de Menús	3
+289	MNU_PARAM	Menu Parameter Object	4
+290	MNU_PARAM_INIT_VAL	Valor Inicial de Parámetro de Menú	3
+291	MNU_PARAM_INIT_VAL_STRID	ID Cadena de Valor Inicial de Parámetro de Menú	2
+292	MNU_ROLE	Roles de Menú	3
+293	MNU_SRC	Origen de Menú	2
+294	MNU_STY	Menu Style	2
+295	MODAL	Modal	1
+296	MODULE	Owning Module	4
+297	MOUSE_NAVIGATE	Navegación del Ratón	1
+298	MOUSE_NAVIGATION_LMT	Límite de Navegación del Ratón	2
+299	MV_ALLOWED	Movimiento Permitido	1
+300	NAME	Nombre	3
+301	NAVIGATION_STY	Estilo de Navegación	2
+302	NEXT	Next Object	4
+303	NXT_NAVIGATION_BLK_NAM	Bloque de Datos de Navegación Siguiente	3
+304	NXT_NAVIGATION_BLK_OBJ	Next Data Block Object	4
+305	NXT_NAVIGATION_ITM_NAM	Elemento de Navegación Siguiente	3
+306	NXT_NAVIGATION_ITM_OBJ	Next Item Object	4
+307	OBJ_COUNT	Recuento de Objetos	2
+308	OBJ_GRP	Object Group Object	4
+309	OBJ_GRP_CHILD_REAL_OBJ	Objeto real que señala el grupo de objetos hijo	4
+310	OBJ_LIB_TAB	Object Library Tab	4
+311	OG_CHILD	Object Group Child Object	4
+312	OLD_LOV_TXT	Texto de la Lista de Valores Antiguo	3
+313	OLE_ACT_STY	Estilo de Activación OLE	2
+314	OLE_CLASS	Clase OLE	3
+315	OLE_INSD_OUT_SUPPORT	Soporte Inside-Out OLE	1
+316	OLE_IN_PLACE_ACT	Activación OLE In-place	1
+317	OLE_POPUP_MNU_ITMS	Elementos de Menú Desplegable OLE	2
+318	OLE_RESIZ_STY	Estilo de Dimensionamiento OLE	2
+319	OLE_SHOW_POPUP_MNU	Mostrar el Menú Desplegable OLE	1
+320	OLE_SHOW_TNNT_TYP	Mostrar Tipo de Contenido OLE	1
+321	OLE_TNNT_ASPCT	Aspecto de Contenido OLE	2
+322	OLE_TNNT_TYP	Tipos de Contenido OLE	2
+323	OPT_HINT	Indicación de Optimizador	3
+324	ORDR_BY_CLAUSE	Cláusula ORDER BY	3
+325	OTHER_VALS	Correspondencia de Otros Valores	3
+326	OWNER	Owning Object	4
+327	PARAM_DAT_TYP	Tipo de Dato del Parámetro	2
+328	PARAM_INIT_VAL	Valor Inicial del Parámetro	3
+329	PARAM_INIT_VAL_STRID	ID Cadena de Valor Inicial de Parámetro	2
+330	PAR_FLNAM	Nombre de Fichero del Objeto Padre	3
+331	PAR_FLPATH	Ruta del Fichero del Objeto Padre	3
+332	PAR_MODSTR	Tipo de Almacenamiento del Módulo del Objeto Padre	2
+333	PAR_MODTYP	Tipo de Módulo del Objeto Padre	2
+334	PAR_MODULE	Módulo del Objeto Padre	3
+335	PAR_NAM	Nombre del Objeto Padre	3
+336	PAR_SL1OBJ_NAM	Nombre del Propietario del Primer Nivel del Objeto Padre	3
+337	PAR_SL1OBJ_TYP	Tipo del Propietario del Primer Nivel del Objeto Padre	2
+338	PAR_SL2OBJ_NAM	Nombre del Propietario del Segundo Nivel del Objeto Padre	3
+339	PAR_SL2OBJ_TYP	Tipo del Propietario del Segundo Nivel del Objeto Padre	2
+340	PAR_TYP	Tipo del Objeto Padre	2
+341	PERSIST_CLIENT_INFO	Persistent Client Info Storage	0
+342	PERSIST_CLT_INF_LEN	Persistent Client Info Storage Length	2
+343	PGU_TXT	Texto de la Unidad de Programa	3
+344	PGU_TYP	Tipo de Unidad de Programa	2
+345	POINT	Point Object	4
+346	POPUP_MNU_NAM	Menú Desplegable	3
+347	POPUP_MNU_OBJ	Popup Menu Object	4
+348	POPUP_VA_OBJ	Tooltip VA Object	4
+349	PRECOMP_SUMM	Precalcular Totales	1
+350	PREVIOUS	Previous Object	4
+351	PREV_NAVIGATION_BLK_NAM	Bloque de Datos de Navegación Anterior	3
+352	PREV_NAVIGATION_BLK_OBJ	Previous Data Block Object	4
+353	PREV_NAVIGATION_ITM_NAM	Elemento de Navegación Anterior	3
+354	PREV_NAVIGATION_ITM_OBJ	Previous Item Object	4
+355	PRMPT	Prompt	3
+356	PRMPT_ALIGN	Alineamiento del Prompt	2
+357	PRMPT_ALIGN_OFST	Desplazamiento del Alineamiento del Prompt	2
+358	PRMPT_ATT_EDGE	Borde del Anexo del Prompt	2
+359	PRMPT_ATT_OFST	Desplazamiento del Anexo del Prompt	2
+360	PRMPT_BACK_COLOR	Prompt Background Color	3
+361	PRMPT_DISP_STY	Estilo de Visualización del Prompt	2
+362	PRMPT_FILL_PAT	Prompt Fill Pattern	3
+363	PRMPT_FONT_NAM	Nombre de la Fuente del Prompt	3
+364	PRMPT_FONT_SIZ	Tamaño de la Fuente del Prompt	2
+365	PRMPT_FONT_SPCING	Espaciado de la Fuente del Prompt	2
+366	PRMPT_FONT_STY	Estilo de la Fuente del Prompt	2
+367	PRMPT_FONT_WGHT	Grosor de la Fuente del Prompt	2
+368	PRMPT_FORE_COLOR	Color del Primer Plano del Prompt	3
+369	PRMPT_JST	Justificación del Prompt	2
+370	PRMPT_READING_ORDR	Orden de Lectura del Prompt	2
+371	PRMPT_STRID	ID Cadena de Prompt	2
+372	PRMPT_VAT_NAM	Grupo de Atributos Visuales del Prompt	3
+373	PRMPT_VAT_OBJ	Prompt VA Object	4
+374	PRMRY_CNV	Lienzo Primario	3
+375	PRMRY_KEY	Clave Primaria	1
+376	PROG_UNIT	Program Unit Object	4
+377	PROP_CLASS	Property Class Object	4
+378	PRVNT_MSTRLESS_OPS	Evitar Operaciones sin Maestro	1
+379	QRY_ALLOWED	Consulta Permitida	1
+380	QRY_ALL_RECS	Consultar Todos los Registros	1
+381	QRY_DAT_SRC_ARG	Query Argument Object	4
+382	QRY_DAT_SRC_COL	Query Column Object	4
+383	QRY_DAT_SRC_NAM	Nombre del Origen de Datos de Consulta	3
+384	QRY_DAT_SRC_TYP	Tipo de Origen de Datos de Consulta	2
+385	QRY_LEN	Longitud de Consulta	2
+386	QRY_ONLY	Sólo Consulta	1
+387	RAD_BUT	Radio Button Object	4
+388	RAISE_ON_ENT	Abrir al Entrar	1
+389	RDB_VAL	Valor de Botón de Radio	3
+390	READING_ORDR	Orden de Lectura	2
+391	REAL_UNIT	Unidad Real	2
+392	RECS_BUFFERED_COUNT	Número de Registros Memorizados	2
+393	RECS_DISP_COUNT	Número de Registros Mostrados	2
+394	RECS_FETCHED_COUNT	Tamaño de Vector de Consulta	2
+395	REC_GRP	Record Group Object	4
+396	REC_GRP_FETCH_SIZ	Tamaño de Búsqueda del Grupo de Registros	2
+397	REC_GRP_NAM	Grupo de Registros	3
+398	REC_GRP_OBJ	Record Group Object Pointer	4
+399	REC_GRP_QRY	Consulta del Grupo de Registros	3
+400	REC_GRP_TYP	Tipo de Grupo de Registros	2
+401	REC_ORNT	Orientación del Registro	2
+402	REC_VAT_GRP_NAM	Grupo de Atributos Visuales del Registro Actual	3
+403	REC_VAT_GRP_OBJ	Current Record VA Pointer	4
+404	REL	Relation Object	4
+405	REL_TYPE	Tipo de Relación	2
+406	RENDERED	Presentado	1
+407	REPORT	Report Object	4
+408	REQUIRED	Obligatorio	1
+409	RESIZE_ALLOWED	Dimensionamiento Permitido	1
+410	REV_DIR	Dirección Inversa	1
+411	ROLE_COUNT	Recuento de Roles	2
+412	RPT_DESTINATION_FMT	Formato del Destino del Informe	3
+413	RPT_DESTINATION_NAM	Nombre del Destino del Informe	3
+414	RPT_DESTINATION_TYP	Tipo de Destino del Informe	2
+415	RPT_PARAMS	Otros Parámetros de Informes	3
+416	RPT_SRVR	Servidor de Informes	3
+417	RTRN_ITM	Elemento de Retorno	3
+418	RUNTIME_COMP	Modo de Compatibilidad de Ejecución	2
+419	SCRLBR_ALIGN	Alineamiento de la Barra de Desplazamiento	2
+420	SCRLBR_CNV_NAM	Lienzo de Barra de Desplazamiento	3
+421	SCRLBR_CNV_OBJ	Scrollbar Canvas Object Pointer	4
+422	SCRLBR_LEN	Longitud de la Barra de Desplazamiento	2
+423	SCRLBR_ORNT	Orientación de Barra de Desplazamiento	2
+424	SCRLBR_TBP_NAM	Página con Pestaña de Barra de Desplazamiento	3
+425	SCRLBR_TBP_OBJ	Scrollbar Tab Object	4
+426	SCRLBR_WID	Ancho de Barra de Desplazamiento	2
+427	SCRLBR_X_POS	Posición X en la Barra de Desplazamiento	2
+428	SCRLBR_Y_POS	Posición Y en la Barra de Desplazamiento	2
+429	SHARE_LIB	Compartir Biblioteca con Pantalla	1
+430	SHOW_FAST_FWD	Mostrar Botón Avance Rápido	1
+431	SHOW_HORZ_SCRLBR	Mostrar Barra de Desplazamiento Horizontal	1
+432	SHOW_PALETTE	Mostrar Paleta	1
+433	SHOW_PLAY	Mostrar Botón Reproducir	1
+434	SHOW_REC	Mostrar Botón Grabar	1
+435	SHOW_REWIND	Mostrar Botón Rebobinar	1
+436	SHOW_SCRLBR	Mostrar Barra de Desplazamiento	1
+437	SHOW_SLIDER	Mostrar Dispositivo Deslizante	1
+438	SHOW_TIME	Mostrar Indicador de Tiempo	1
+439	SHOW_VERT_SCRLBR	Mostrar Barra de Desplazamiento Vertical	1
+440	SHOW_VOLUME	Mostrar Control de Volumen	1
+441	SHRINKWRAP	Reducir-Ajustar	1
+442	SIZING_STY	Estilo del Tamaño	2
+443	SND_FMT	Formato de Sonido	2
+444	SND_QLTY	Calidad de Sonido	2
+445	SNGL_OBJ_ALIGN	Alineamiento de Objeto Unico	2
+446	SNGL_REC	Registro Unico	1
+447	SOURCE	Source Object	4
+448	STRTUP_CODE	Código de Arranque	3
+449	STRT_PRMPT_ALIGN	Alineamiento del Prompt Inicial	2
+450	STRT_PRMPT_OFST	Desplazamiento del Prompt Inicial	2
+451	SUBCL_OBJGRP	<null>	1
+452	SUBCL_SUBOBJ	<null>	1
+453	SUB_MNU_NAM	Nombre de Submenú	3
+454	SUB_MNU_OBJ	Submenu Object	4
+455	SUB_TTL	Subtítulo	3
+456	SUB_TTL_STRID	ID Cadena de Subtítulo	2
+457	SUMM_BLK_NAM	Bloque de Total	3
+458	SUMM_FUNC	Función Totalizar	2
+459	SUMM_ITM_NAM	Elemento de Total	3
+460	SVPNT_MODE	Modo de Guardaguardia	1
+461	SYNC_ITM_NAM	Sincronizar con Elemento	3
+462	SYNC_ITM_OBJ	Mirror Item Object	4
+463	TAB_ACT_STY	Estilo Activo	2
+464	TAB_ATT_EDGE	Borde del Anexo de la Pestaña	2
+465	TAB_PAGE	Tab Page	4
+466	TAB_STY	Estilo de Esquina	2
+467	TAB_WID_STY	Estilo del Ancho	2
+468	TBP_NAM	Página con Pestaña	3
+469	TBP_OBJ	Tab Page Name	4
+470	TEAR_OFF_MNU	Menú Desplazable	1
+471	TEXT	Valor de Elemento de Lista	3
+472	TEXT_SEG	Simple Text Object	4
+473	TEXT_STRID	ID Cadena de Texto de Gráfico	2
+474	TITLE	Título	3
+475	TITLE_STRID	ID Cadena de Título	2
+476	TOOLTIP	Tooltip	3
+477	TOOLTIP_STRID	ID Cadena de Indicación de Ayuda	2
+478	TOOLTIP_VAT_GRP	Grupo de Atributos Visuales de Indicación de Herramienta	3
+479	TOP_PRMPT_ALIGN	Alineamiento del Prompt Superior	2
+480	TOP_PRMPT_OFST	Desplazamiento del Prompt Superior	2
+481	TRE_ALLW_EMP_BRANCH	Permitir Bifurcaciones Vacías	1
+482	TRE_DATA_QRY	Consulta de Datos	3
+483	TRE_MULTI_SELECT	Varias Selecciones	1
+484	TRE_REC_GRP	Grupo de Registros	3
+485	TRE_SHOW_LINES	Mostrar Líneas	1
+486	TRE_SHOW_SYMBOL	Mostrar Símbolos	1
+487	TRG_INTERNAL_TYP	Trigger Internal Type	2
+488	TRG_STY	Estilo de Disparador	2
+489	TRG_TXT	Texto del Disparador 	3
+490	TRIGGER	Trigger Object	4
+491	TTL_READING_ORDR	Orden de Lectura del Título del Marco	2
+492	UNCHKED_VAL	Valor si no está Comprobado	3
+493	UPDT_ALLOWED	Actualización Permitida	1
+494	UPDT_CHANGED_COLS	Actualizar Sólo Columnas Cambiadas	1
+495	UPDT_COMMIT	Actualizar al Validar	1
+496	UPDT_IF_NULL	Actualizar Sólo si es NULO	1
+497	UPDT_LAYOUT	Actualizar Diseño	2
+498	UPDT_PROC_NAM	Actualizar Nombre del Procedimiento	3
+499	UPDT_QRY	Actualizar al Consultar	1
+500	UPD_DAT_SRC_ARG	Update Argument Object	4
+501	UPD_DAT_SRC_COL	Update Column Object	4
+502	USE_3D_CNTRLS	Usar Controles 3D	1
+503	USE_SECURITY	Usar Seguridad	1
+504	VALIDATE_FROM_LST	Validar desde Lista	1
+505	VALIDATION_UNIT	Unidad de Validación	2
+506	VAT_NAM	Grupo de Atributos Visuales	3
+507	VAT_OBJ	VA Object	4
+508	VAT_TYP	Tipo de Atributo Visual	2
+509	VERT_FILL	Relleno Vertical	1
+510	VERT_JST	Justificación Vertical	2
+511	VERT_MARGN	Margen Vertical	2
+512	VERT_OBJ_OFST	Desplazamiento del Objeto Vertical	2
+513	VERT_ORGN	Origen Vertical	2
+514	VERT_TLBR_CNV	Lienzo de la Barra de Herramientas Vertical de la Pantalla	3
+515	VISIBLE	Visible	1
+516	VIS_ATTR	Visual Attribute Object	4
+517	VPRT_HGT	Altura de la Puerta de Vista	2
+518	VPRT_WID	Ancho de la Puerta de Vista	2
+519	VPRT_X_POS	Posición X en la Puerta de Vista	2
+520	VPRT_X_POS_ON_CNV	Posición X de la Puerta de Vista en el Lienzo	2
+521	VPRT_Y_POS	Posición Y en la Puerta de Vista	2
+522	VPRT_Y_POS_ON_CNV	Posición Y de la Puerta de Vista en el Lienzo	2
+523	VSBL_IN_HORZ_MNU_TLBR	Visible en Barra de Herramientas de Menú Horizontal	1
+524	VSBL_IN_MENU	Visible en Menú	1
+525	VSBL_IN_VERT_MNU_TLBR	Visible en Barra de Herramientas de Menú Vertical	1
+526	VTB_CNV_NAME	Lienzo de Barra de Herramientas Vertical	3
+527	WHERE_CLAUSE	Cláusula WHERE	3
+528	WHITE_ON_BLACK	Blanco sobre Negro	1
+529	WIDTH	Ancho	2
+530	WINDOW	Window Object	4
+531	WIN_STY	Estilo de Ventana	2
+532	WND_NAM	Ventana	3
+533	WND_OBJ	Window Object Pointer	4
+534	WRAP_STY	Estilo de Ajuste de Texto	2
+535	WRAP_TXT	Texto de Ajuste	1
+536	X_POS	Posición X	2
+537	Y_POS	Posición Y	2
+538	COLUMN_VALUE	Valor de Columna	4
+539	GRA_TEXT_STRID	ID Cadena de Texto de Gráfico	2
+540	NEWDEFER_REQ_ENF	Diferir Aplicación Obligatoria	2
+541	CHAR_MODE_LOGICAL_ATTR	Atributo Lógico de Modo Carácter	3
+542	ABORT_FAIL	Abortar en caso de Error	1
+543	FAIL_LABEL	Etiqueta de Error	3
+544	FAIL_MSG	Mensaje de Error	3
+545	NEW_CURSOR	Nuevo Cursor	1
+546	REV_RET	Invertir Código de Retorno	1
+547	SUCC_ABORT	Correcto a pesar de Abortar	1
+548	SUCC_LABEL	Etiqueta de Exito	3
+549	TRIG_STEP_TXT	Texto del Paso de Disparador	3
+550	QRY_NAME	Trigger Step Object	4

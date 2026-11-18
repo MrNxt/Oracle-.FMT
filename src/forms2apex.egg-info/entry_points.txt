@@ -1,0 +1,2 @@
+[console_scripts]
+forms2apex = forms2apex.cli:app

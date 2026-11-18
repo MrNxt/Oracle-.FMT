@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+src/forms2apex/__init__.py
+src/forms2apex.egg-info/PKG-INFO
+src/forms2apex.egg-info/SOURCES.txt
+src/forms2apex.egg-info/dependency_links.txt
+src/forms2apex.egg-info/entry_points.txt
+src/forms2apex.egg-info/requires.txt
+src/forms2apex.egg-info/top_level.txt
+src/forms2apex/parser/__init__.py

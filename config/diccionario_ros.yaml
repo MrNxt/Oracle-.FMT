@@ -1,0 +1,3067 @@
+# Generado por la calibración (etapa 0). Ver tools/calibracion/reporte_calibracion.md
+generado:
+  por: tools/calibracion/calibrar.py
+  fecha: '2026-11-18'
+  modulos:
+  - STKC007.fmt
+  - fini018.fmt
+  - WAPIDEMO.mmt
+  nota: Número de propiedad ROS -> propiedad oficial de Forms 6i. Editable a mano. 'defaults' = valor que asume Forms cuando
+    la propiedad no está grabada en el .fmt, por número de tipo de objeto ROS. 'por_tipo' = el mismo número significa cosas
+    distintas según el tipo de objeto.
+tipos_objeto:
+  3:
+    const: ALERT
+    alineados: 6
+    ejemplos:
+    - AL_CONFIRMAR
+    - AL_ERROR
+    - AL_MESSAGE
+  5:
+    const: ATT_LIB
+    alineados: 3
+    ejemplos:
+    - LIB
+    - LIB_TALO
+  7:
+    const: BLOCK
+    alineados: 13
+    ejemplos:
+    - BCHEQ
+    - BCLIPROV
+    - BCUO
+  9:
+    const: GRAPHIC
+    alineados: 50
+    ejemplos:
+    - GRAPHIC343
+    - GRAPHIC345
+    - LINE1
+  11:
+    const: CANVAS
+    alineados: 4
+    ejemplos:
+    - CANVAS
+    - CHEQUES
+    - CV_CHEQUES
+  13:
+    const: LV_COLMAP
+    alineados: 40
+    ejemplos:
+    - BCO_CODIGO
+    - BCO_DESC
+    - CAST_BCO_CODIGO
+  15:
+    const: RG_COLSPEC
+    alineados: 40
+    ejemplos:
+    - BCO_CODIGO
+    - BCO_DESC
+    - CAST_BCO_CODIGO
+  22:
+    const: FORM_MODULE
+    alineados: 2
+    ejemplos:
+    - FINI018
+    - STKC007
+  24:
+    const: FORM_PARAM
+    alineados: 84
+    ejemplos:
+    - EMPR_CLI_CODIGO
+    - EMPR_PROV_CODIGO
+    - P_1
+  30:
+    const: ITEM
+    alineados: 249
+    ejemplos:
+    - ACEPTAR
+    - ART_DESC_ABREV
+    - AUX_CLAVE
+  36:
+    const: LOV
+    alineados: 14
+    ejemplos:
+    - LOV_BANCO_PAGO
+    - LOV_BCO
+    - LOV_CLI
+  38:
+    const: MENU_MODULE
+    alineados: 1
+    ejemplos:
+    - WAPIDEMO
+  40:
+    const: MENU
+    alineados: 5
+    ejemplos:
+    - EDIT_MENU
+    - FILE_MENU
+    - HELP_MENU
+  42:
+    const: MENU_ITEM
+    alineados: 18
+    ejemplos:
+    - ABOUT_D2KWUTIL
+    - COPY
+    - COPY_SAMPLE_CODE
+  58:
+    const: PROG_UNIT
+    alineados: 78
+    ejemplos:
+    - CHECK_PACKAGE_FAILURE
+    - CLEAR_ALL_MASTER_DETAILS
+    - FP_BUSCA_CTACO_CAJA
+  62:
+    const: RADIO_BUTTON
+    alineados: 2
+    ejemplos:
+    - 'NO'
+    - SI
+  64:
+    const: REC_GROUP
+    alineados: 14
+    ejemplos:
+    - LOV_BANCO_PAGO
+    - LOV_BCO
+    - LOV_CLIENTE
+  66:
+    const: RELATION
+    alineados: 1
+    ejemplos:
+    - BDOCU_BDETA
+  68:
+    const: TRIGGER
+    alineados: 158
+    ejemplos:
+    - FORMULA-CALCULATION
+    - KEY-CLRBLK
+    - KEY-CLRFRM
+  74:
+    const: VIS_ATTR
+    alineados: 9
+    ejemplos:
+    - VA_FONDO_AMARILLO
+    - VA_ROJO
+    - VISUAL_BOTONES
+  78:
+    const: WINDOW
+    alineados: 3
+    ejemplos:
+    - WINDOW0
+    - W_CHEQUES
+  84:
+    const: NONE
+    alineados: 43
+    ejemplos:
+    - CMPTXT10
+    - CMPTXT100
+    - CMPTXT13
+  86:
+    const: ACCESS_KEY
+    alineados: 43
+    ejemplos:
+    - TEXTSTR101
+    - TEXTSTR11
+    - TEXTSTR14
+propiedades:
+  4:
+    clase_ros: O
+    const: ALERT
+    nombre: Alert Object
+    tipo_api: objeto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 22
+  5:
+    clase_ros: N
+    const: JUSTIFICATION
+    nombre: Justificación
+    tipo_api: numero
+    confianza: alta
+    muestras: 119
+    defaults:
+      30: '3'
+    tipos_objeto:
+    - 30
+  6:
+    clase_ros: T
+    const: BTN_1_LBL
+    nombre: Etiqueta de Botón 1
+    tipo_api: texto
+    confianza: alta
+    muestras: 6
+    tipos_objeto:
+    - 3
+  7:
+    clase_ros: T
+    const: BTN_2_LBL
+    nombre: Etiqueta de Botón 2
+    tipo_api: texto
+    confianza: alta
+    muestras: 6
+    tipos_objeto:
+    - 3
+  9:
+    clase_ros: N
+    const: DFLT_ALT_BTN
+    nombre: Botón de Alerta Por Defecto
+    tipo_api: numero
+    confianza: media
+    muestras: 1
+    defaults:
+      3: '0'
+    tipos_objeto:
+    - 3
+  11:
+    clase_ros: N
+    const: ALT_STY
+    nombre: Estilo de Alerta
+    tipo_api: numero
+    confianza: alta
+    muestras: 3
+    defaults:
+      3: '0'
+    tipos_objeto:
+    - 3
+  13:
+    clase_ros: O
+    const: ATT_LIB
+    nombre: Attached Library
+    tipo_api: objeto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 22
+  16:
+    clase_ros: B
+    const: PRVNT_MSTRLESS_OPS
+    nombre: Evitar Operaciones sin Maestro
+    tipo_api: booleano
+    alternativas:
+    - SUBCL_SUBOBJ
+    - SUBCL_OBJGRP
+    - DIRTY_INFO (invertido)
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 66
+  19:
+    clase_ros: T
+    const: BACK_COLOR
+    nombre: Color del Fondo
+    tipo_api: texto
+    confianza: alta
+    muestras: 182
+    defaults:
+      30: white
+    tipos_objeto:
+    - 3
+    - 9
+    - 11
+    - 30
+    - 74
+  20:
+    clase_ros: B
+    const: DB_ITM
+    nombre: Elemento de Base de Datos
+    tipo_api: booleano
+    confianza: alta
+    muestras: 218
+    defaults:
+      30: '1'
+    tipos_objeto:
+    - 30
+  22:
+    clase_ros: N
+    const: BEVEL
+    nombre: Bisel
+    tipo_api: numero
+    alternativas:
+    - TOP_PRMPT_ALIGN
+    confianza: alta
+    muestras: 271
+    defaults:
+      30: '1'
+      78: '1'
+    tipos_objeto:
+    - 9
+    - 11
+    - 30
+    - 78
+  23:
+    clase_ros: T
+    const: BLK_DESCRIPTION
+    nombre: Descripción del Bloque de Datos
+    tipo_api: texto
+    confianza: alta
+    muestras: 5
+    tipos_objeto:
+    - 7
+  24:
+    clase_ros: N
+    const: BLK_DSCRP_STRID
+    nombre: ID Cadena de Descripción de Bloque de Datos
+    tipo_api: numero
+    confianza: alta
+    muestras: 5
+    defaults:
+      7: '0'
+    tipos_objeto:
+    - 7
+  27:
+    clase_ros: O
+    const: BLOCK
+    nombre: Data Block Object
+    tipo_api: objeto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 22
+  30:
+    clase_ros: O
+    const: GRAPHIC
+    nombre: Boilerplate Object
+    tipo_api: objeto
+    confianza: alta
+    muestras: 4
+    tipos_objeto:
+    - 11
+  32:
+    clase_ros: O
+    const: CANVAS
+    nombre: Canvas Object
+    tipo_api: objeto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 22
+  33:
+    clase_ros: T
+    const: CNV_NAM
+    nombre: Lienzo
+    tipo_api: texto
+    confianza: alta
+    muestras: 224
+    tipos_objeto:
+    - 30
+  37:
+    clase_ros: N
+    const: CASE_RSTRCTION
+    nombre: Restricción Mayúsculas/Minúsculas
+    tipo_api: numero
+    alternativas:
+    - OLE_RESIZ_STY
+    - CHK_BX_OTHER_VALS
+    - PRMPT_DISP_STY
+    confianza: alta
+    muestras: 12
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  39:
+    clase_ros: T
+    const: CHAR_MODE_LOGICAL_ATTR
+    nombre: Atributo Lógico de Modo Carácter
+    tipo_api: texto
+    confianza: alta
+    muestras: 7
+    tipos_objeto:
+    - 74
+  42:
+    clase_ros: T
+    const: CHKED_VAL
+    nombre: Valor si está Comprobado
+    tipo_api: texto
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 30
+  43:
+    clase_ros: B
+    const: CLS_ALLOWED
+    nombre: Cierre Permitido
+    tipo_api: booleano
+    alternativas:
+    - RESIZE_ALLOWED (invertido)
+    confianza: alta
+    muestras: 3
+    tipos_objeto:
+    - 78
+  45:
+    clase_ros: N
+    const: CNV_TYP
+    nombre: Tipo de Lienzo
+    tipo_api: numero
+    confianza: alta
+    muestras: 3
+    defaults:
+      11: '0'
+    tipos_objeto:
+    - 11
+  47:
+    clase_ros: N
+    const: COL_DAT_TYP
+    nombre: Tipo de Dato de Columna
+    tipo_api: numero
+    confianza: alta
+    muestras: 40
+    tipos_objeto:
+    - 15
+  49:
+    clase_ros: O
+    const: COL_MAP
+    nombre: Column Mapping Object
+    tipo_api: objeto
+    confianza: alta
+    muestras: 14
+    tipos_objeto:
+    - 36
+  52:
+    clase_ros: O
+    const: COL_SPEC
+    nombre: Column Specification Object
+    tipo_api: objeto
+    confianza: alta
+    muestras: 14
+    tipos_objeto:
+    - 64
+  56:
+    clase_ros: N
+    const: COM_TYP
+    nombre: Tipo de Comando
+    tipo_api: numero
+    confianza: alta
+    muestras: 6
+    defaults:
+      42: '2'
+    tipos_objeto:
+    - 42
+  57:
+    clase_ros: T
+    const: COMMENT
+    nombre: Comentarios
+    tipo_api: texto
+    confianza: alta
+    muestras: 16
+    tipos_objeto:
+    - 7
+    - 22
+    - 24
+    - 30
+    - 68
+  59:
+    clase_ros: T
+    const: CONSOLE_WIN
+    nombre: Ventana de Consola
+    tipo_api: texto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 22
+  63:
+    clase_ros: N
+    const: CRSR_MODE
+    nombre: Modo de Cursor
+    tipo_api: numero
+    alternativas:
+    - RUNTIME_COMP
+    - VALIDATION_UNIT
+    - ISOLATION_MODE
+    confianza: media
+    muestras: 1
+    defaults:
+      22: '0'
+    tipos_objeto:
+    - 22
+  64:
+    clase_ros: B
+    const: AUTO_QRY
+    nombre: Consulta Automática
+    tipo_api: booleano
+    alternativas:
+    - PRVNT_MSTRLESS_OPS
+    - SUBCL_SUBOBJ
+    - SUBCL_OBJGRP
+    confianza: baja
+    muestras: 1
+    tipos_objeto:
+    - 66
+  65:
+    clase_ros: B
+    const: DEL_ALLOWED
+    nombre: Borrado Permitido
+    tipo_api: booleano
+    alternativas:
+    - UPDT_ALLOWED
+    confianza: alta
+    muestras: 4
+    defaults:
+      7: '1'
+    tipos_objeto:
+    - 7
+  66:
+    clase_ros: N
+    const: DEL_REC
+    nombre: Borrar Comportamiento del Registro
+    tipo_api: numero
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 66
+  67:
+    clase_ros: T
+    const: PRMPT_FORE_COLOR
+    nombre: Color del Primer Plano del Prompt
+    tipo_api: texto
+    confianza: alta
+    muestras: 27
+    tipos_objeto:
+    - 30
+  68:
+    clase_ros: T
+    const: DETAIL_BLK
+    nombre: Bloque de Datos Detalle
+    tipo_api: texto
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 66
+  71:
+    clase_ros: B
+    const: DEFER_REQ_ENF
+    nombre: Diferir Aplicación Obligatoria
+    tipo_api: booleano
+    alternativas:
+    - SUBCL_SUBOBJ
+    - SUBCL_OBJGRP
+    - SVPNT_MODE (invertido)
+    confianza: baja
+    muestras: 2
+    defaults:
+      22: '0'
+    tipos_objeto:
+    - 22
+  73:
+    clase_ros: N
+    const: VERT_JST
+    nombre: Justificación Vertical
+    tipo_api: numero
+    alternativas:
+    - GRA_FONT_COLOR_CODE
+    - CLIP_HGT
+    - FRAME_TTL_FONT_SIZ
+    confianza: alta
+    muestras: 37
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  74:
+    clase_ros: B
+    const: VISIBLE
+    nombre: Visible
+    tipo_api: booleano
+    alternativas:
+    - SHOW_VERT_SCRLBR
+    - RAISE_ON_ENT
+    - WHITE_ON_BLACK
+    confianza: alta
+    muestras: 142
+    defaults:
+      11: '1'
+      30: '1'
+    tipos_objeto:
+    - 11
+    - 30
+  76:
+    clase_ros: B
+    const: SUBCL_SUBOBJ
+    nombre: ''
+    tipo_api: booleano
+    invertido: true
+    alternativas:
+    - SHOW_HORZ_SCRLBR (invertido)
+    - RAISE_ON_ENT (invertido)
+    - WHITE_ON_BLACK (invertido)
+    confianza: baja
+    muestras: 1
+    defaults:
+      11: '0'
+    tipos_objeto:
+    - 11
+  77:
+    clase_ros: N
+    const: DISP_WID
+    nombre: Ancho de Visualización
+    tipo_api: numero
+    confianza: alta
+    muestras: 40
+    tipos_objeto:
+    - 13
+  78:
+    clase_ros: N
+    const: VPRT_X_POS
+    nombre: Posición X en la Puerta de Vista
+    tipo_api: numero
+    confianza: alta
+    muestras: 3
+    defaults:
+      11: '0'
+    tipos_objeto:
+    - 11
+  79:
+    clase_ros: N
+    const: VPRT_Y_POS
+    nombre: Posición Y en la Puerta de Vista
+    tipo_api: numero
+    confianza: alta
+    muestras: 3
+    defaults:
+      11: '0'
+    tipos_objeto:
+    - 11
+  84:
+    clase_ros: N
+    const: EDT_X_POS
+    nombre: Posición X en el Editor
+    tipo_api: numero
+    alternativas:
+    - EDT_Y_POS
+    - ACCESS_KEY_STRID
+    - SIZING_STY
+    confianza: alta
+    muestras: 20
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  85:
+    clase_ros: N
+    const: EDT_Y_POS
+    nombre: Posición Y en el Editor
+    tipo_api: numero
+    alternativas:
+    - ACCESS_KEY_STRID
+    - SIZING_STY
+    - PRMPT_READING_ORDR
+    confianza: alta
+    muestras: 20
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  86:
+    clase_ros: B
+    const: ENABLED
+    nombre: Activado
+    tipo_api: booleano
+    confianza: alta
+    muestras: 129
+    defaults:
+      30: '1'
+    tipos_objeto:
+    - 30
+  87:
+    clase_ros: N
+    const: EXEC_HIERARCHY
+    nombre: Jerarquía de Ejecución
+    tipo_api: numero
+    confianza: media
+    muestras: 1
+    defaults:
+      68: '0'
+    tipos_objeto:
+    - 68
+  90:
+    clase_ros: N
+    por_tipo:
+      9:
+        const: GRA_FONT_STY
+        nombre: Estilo de Fuente de Objeto Gráfico
+        tipo_api: numero
+        confianza: baja
+        muestras: 40
+        acierto: 1.0
+        alternativas:
+        - GRA_FONT_COLOR_CODE
+        - LIN_SPCING
+        - LANG_DIR
+      11:
+        const: FONT_SIZ
+        nombre: Tamaño de la Fuente
+        tipo_api: numero
+        confianza: baja
+        muestras: 1
+        acierto: 1.0
+        default: '0'
+        alternativas:
+        - FONT_STY
+        - TAB_STY
+        - PAR_MODSTR
+    tipos_sin_mapear:
+    - 3
+    - 30
+    - 74
+    - 86
+  91:
+    clase_ros: T
+    const: FILL_PAT
+    nombre: Trama de Relleno
+    tipo_api: texto
+    confianza: alta
+    muestras: 63
+    defaults:
+      30: transparent
+    tipos_objeto:
+    - 9
+    - 30
+    - 74
+  93:
+    clase_ros: T
+    const: FRST_NAVIGATION_BLK_NAM
+    nombre: Primer Bloque de Datos de Navegación
+    tipo_api: texto
+    alternativas:
+    - FRST_NAVIGATION_BLK_OBJ
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 22
+  96:
+    clase_ros: B
+    const: RESIZE_ALLOWED
+    nombre: Dimensionamiento Permitido
+    tipo_api: booleano
+    confianza: alta
+    muestras: 3
+    tipos_objeto:
+    - 78
+  97:
+    clase_ros: T
+    const: MNU_MOD
+    nombre: Módulo de Menús
+    tipo_api: texto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 22
+  103:
+    clase_ros: T
+    const: FONT_NAM
+    nombre: Nombre de la Fuente
+    tipo_api: texto
+    confianza: alta
+    muestras: 133
+    defaults:
+      30: Arial
+    tipos_objeto:
+    - 3
+    - 30
+    - 74
+    - 86
+  104:
+    clase_ros: N
+    const: FONT_SIZ
+    nombre: Tamaño de la Fuente
+    tipo_api: numero
+    confianza: alta
+    muestras: 133
+    defaults:
+      3: '0'
+      30: '900'
+      74: '0'
+    tipos_objeto:
+    - 3
+    - 30
+    - 74
+    - 86
+  105:
+    clase_ros: N
+    const: FONT_STY
+    nombre: Estilo de la Fuente
+    tipo_api: numero
+    alternativas:
+    - PRMPT_FONT_STY
+    - EDT_X_POS
+    - EDT_Y_POS
+    confianza: alta
+    muestras: 126
+    defaults:
+      30: '0'
+      74: '0'
+    tipos_objeto:
+    - 30
+    - 74
+    - 86
+  106:
+    clase_ros: N
+    const: FONT_WGHT
+    nombre: Grosor de la Fuente
+    tipo_api: numero
+    confianza: alta
+    muestras: 131
+    defaults:
+      30: '6'
+      74: '4'
+    tipos_objeto:
+    - 30
+    - 74
+    - 86
+  107:
+    clase_ros: N
+    const: FONT_SPCING
+    nombre: Espaciado de la Fuente
+    tipo_api: numero
+    alternativas:
+    - PRMPT_FONT_SPCING
+    confianza: alta
+    muestras: 125
+    defaults:
+      30: '4'
+      74: '4'
+    tipos_objeto:
+    - 30
+    - 74
+    - 86
+  108:
+    clase_ros: T
+    const: FORE_COLOR
+    nombre: Color del Primer Plano
+    tipo_api: texto
+    confianza: alta
+    muestras: 121
+    defaults:
+      30: black
+    tipos_objeto:
+    - 3
+    - 9
+    - 11
+    - 30
+    - 74
+    - 86
+  110:
+    clase_ros: T
+    const: FMT_MSK
+    nombre: Máscara de Formato
+    tipo_api: texto
+    confianza: alta
+    muestras: 54
+    tipos_objeto:
+    - 30
+  113:
+    clase_ros: O
+    const: FORM_PARAM
+    nombre: Form Parameter Object
+    tipo_api: objeto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 22
+  114:
+    clase_ros: N
+    por_tipo:
+      30:
+        const: SIZING_STY
+        nombre: Estilo del Tamaño
+        tipo_api: numero
+        confianza: baja
+        muestras: 7
+        acierto: 1.0
+        default: '0'
+        alternativas:
+        - PRMPT_READING_ORDR
+        - PAR_MODSTR
+        - COMM_MODE
+      74:
+        const: VAT_TYP
+        nombre: Tipo de Atributo Visual
+        tipo_api: numero
+        confianza: baja
+        muestras: 7
+        acierto: 1.0
+        default: '0'
+        alternativas:
+        - FRAME_TTL_FONT_SIZ
+        - PAR_MODSTR
+        - PAR_TYP
+    tipos_sin_mapear:
+    - 9
+  115:
+    clase_ros: N
+    const: PARAM_DAT_TYP
+    nombre: Tipo de Dato del Parámetro
+    tipo_api: numero
+    confianza: alta
+    muestras: 51
+    defaults:
+      24: '0'
+    tipos_objeto:
+    - 24
+  116:
+    clase_ros: T
+    const: PARAM_INIT_VAL
+    nombre: Valor Inicial del Parámetro
+    tipo_api: texto
+    confianza: alta
+    muestras: 32
+    tipos_objeto:
+    - 24
+  121:
+    clase_ros: N
+    const: HEIGHT
+    nombre: Altura
+    tipo_api: numero
+    confianza: alta
+    muestras: 320
+    defaults:
+      9: '1'
+    tipos_objeto:
+    - 9
+    - 11
+    - 30
+    - 36
+    - 62
+    - 78
+  124:
+    clase_ros: T
+    const: HINT
+    nombre: Indicación
+    tipo_api: texto
+    confianza: alta
+    muestras: 132
+    tipos_objeto:
+    - 30
+    - 42
+  125:
+    clase_ros: B
+    por_tipo:
+      30:
+        const: SHOW_HORZ_SCRLBR
+        nombre: Mostrar Barra de Desplazamiento Horizontal
+        tipo_api: booleano
+        confianza: alta
+        muestras: 205
+        acierto: 1.0
+        default: '0'
+        alternativas:
+        - SHOW_VERT_SCRLBR
+        - VALIDATE_FROM_LST
+        - SUBCL_SUBOBJ
+      78:
+        const: MAXIMIZE_ALLOWED
+        nombre: Maximización Permitida
+        tipo_api: booleano
+        confianza: baja
+        muestras: 3
+        acierto: 1.0
+        alternativas:
+        - SHOW_VERT_SCRLBR
+        - SUBCL_SUBOBJ
+        - WHITE_ON_BLACK
+  128:
+    clase_ros: B
+    const: MINIMIZE_ALLOWED
+    nombre: Minimización Permitida
+    tipo_api: booleano
+    confianza: alta
+    muestras: 3
+    tipos_objeto:
+    - 78
+  132:
+    clase_ros: B
+    const: INHRT_MNU
+    nombre: Heredar Menú
+    tipo_api: booleano
+    alternativas:
+    - DIRTY_INFO
+    - MV_ALLOWED
+    - RESIZE_ALLOWED
+    confianza: media
+    muestras: 1
+    defaults:
+      78: '1'
+    tipos_objeto:
+    - 78
+  133:
+    clase_ros: N
+    const: ACCESS_KEY_STRID
+    nombre: ID Cadena de Tecla de Acceso
+    tipo_api: numero
+    alternativas:
+    - SIZING_STY
+    - PRMPT_READING_ORDR
+    - PAR_MODSTR
+    confianza: baja
+    muestras: 27
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  134:
+    clase_ros: B
+    const: INSRT_ALLOWED
+    nombre: Inserción Permitida
+    tipo_api: booleano
+    alternativas:
+    - UPDT_ALLOWED
+    - DEL_ALLOWED
+    confianza: alta
+    muestras: 38
+    defaults:
+      7: '1'
+      30: '1'
+    tipos_objeto:
+    - 7
+    - 30
+  137:
+    clase_ros: O
+    const: ITEM
+    nombre: Item Object
+    tipo_api: objeto
+    confianza: alta
+    muestras: 13
+    tipos_objeto:
+    - 7
+  139:
+    clase_ros: N
+    const: ITM_TYP
+    nombre: Tipo de Elemento
+    tipo_api: numero
+    confianza: alta
+    muestras: 205
+    defaults:
+      30: '10'
+    tipos_objeto:
+    - 30
+  140:
+    clase_ros: T
+    const: COPY_VAL_FROM_ITM
+    nombre: Copiar Valor desde Elemento
+    tipo_api: texto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 30
+  141:
+    clase_ros: N
+    const: DAT_TYP
+    nombre: Tipo de Dato
+    tipo_api: numero
+    confianza: alta
+    muestras: 175
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  143:
+    clase_ros: N
+    const: INIT_VAL_STRID
+    nombre: ID Cadena de Valor Inicial de Elemento
+    tipo_api: numero
+    confianza: alta
+    muestras: 11
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  145:
+    clase_ros: N
+    const: HINT_STRID
+    nombre: ID Cadena de Indicación
+    tipo_api: numero
+    confianza: alta
+    muestras: 132
+    defaults:
+      30: '0'
+      42: '0'
+    tipos_objeto:
+    - 30
+    - 42
+  146:
+    clase_ros: N
+    const: LABEL_STRID
+    nombre: ID Cadena de Etiqueta
+    tipo_api: numero
+    confianza: alta
+    muestras: 137
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+    - 42
+    - 62
+  148:
+    clase_ros: T
+    const: JOIN_COND
+    nombre: Condición de Unión
+    tipo_api: texto
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 66
+  150:
+    clase_ros: N
+    const: KEY_MODE
+    nombre: Modo de Teclas
+    tipo_api: numero
+    confianza: alta
+    muestras: 7
+    defaults:
+      7: '3'
+    tipos_objeto:
+    - 7
+  151:
+    clase_ros: T
+    const: LABEL
+    nombre: Etiqueta
+    tipo_api: texto
+    confianza: alta
+    muestras: 137
+    tipos_objeto:
+    - 30
+    - 42
+    - 62
+  156:
+    clase_ros: T
+    const: LIB_LOC
+    nombre: Ubicación de la Biblioteca PL/SQL
+    tipo_api: texto
+    confianza: alta
+    muestras: 3
+    tipos_objeto:
+    - 5
+  157:
+    clase_ros: N
+    const: LIB_SRC
+    nombre: Origen de la Biblioteca PL/SQL
+    tipo_api: numero
+    alternativas:
+    - PERSIST_CLT_INF_LEN
+    confianza: alta
+    muestras: 3
+    tipos_objeto:
+    - 5
+  160:
+    clase_ros: N
+    const: LOCK_MODE
+    nombre: Modo de Bloqueo
+    tipo_api: numero
+    alternativas:
+    - DML_ARY_SIZ
+    confianza: alta
+    muestras: 13
+    tipos_objeto:
+    - 7
+  162:
+    clase_ros: B
+    const: FLTR_BEFORE_DISP
+    nombre: Filtrar antes de Visualizar
+    tipo_api: booleano
+    alternativas:
+    - DIRTY_INFO
+    - AUTO_RFRSH
+    - SUBCL_SUBOBJ (invertido)
+    confianza: media
+    muestras: 1
+    defaults:
+      36: '0'
+    tipos_objeto:
+    - 36
+  164:
+    clase_ros: O
+    const: LOV
+    nombre: LOV Object
+    tipo_api: objeto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 22
+  165:
+    clase_ros: T
+    const: LOV_NAM
+    nombre: Lista de Valores
+    tipo_api: texto
+    confianza: media
+    muestras: 17
+    tipos_objeto:
+    - 30
+  168:
+    clase_ros: B
+    const: VALIDATE_FROM_LST
+    nombre: Validar desde Lista
+    tipo_api: booleano
+    alternativas:
+    - SUBCL_SUBOBJ
+    - HIDE
+    - WHITE_ON_BLACK
+    confianza: media
+    muestras: 1
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  169:
+    clase_ros: N
+    const: LOV_X_POS
+    nombre: Posición X en la Lista
+    tipo_api: numero
+    confianza: alta
+    muestras: 27
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  170:
+    clase_ros: N
+    const: LOV_Y_POS
+    nombre: Posición Y en la Lista
+    tipo_api: numero
+    confianza: alta
+    muestras: 27
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  173:
+    clase_ros: N
+    const: MAGIC_ITM
+    nombre: Elemento Mágico
+    tipo_api: numero
+    confianza: alta
+    muestras: 5
+    defaults:
+      42: '0'
+    tipos_objeto:
+    - 42
+  174:
+    clase_ros: T
+    const: MAIN_MNU
+    nombre: Menú Principal
+    tipo_api: texto
+    alternativas:
+    - MENU
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 38
+  175:
+    clase_ros: N
+    const: MAX_LEN
+    nombre: Longitud Máxima
+    tipo_api: numero
+    confianza: alta
+    muestras: 324
+    defaults:
+      24: '30'
+      30: '30'
+    tipos_objeto:
+    - 15
+    - 24
+    - 30
+  180:
+    clase_ros: T
+    const: MNU_FLNAM
+    nombre: Nombre de Fichero de Menús
+    tipo_api: texto
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 38
+  183:
+    clase_ros: O
+    const: MNU_ITM
+    nombre: Menu Item Object
+    tipo_api: objeto
+    confianza: alta
+    muestras: 5
+    tipos_objeto:
+    - 40
+  184:
+    clase_ros: N
+    const: MNU_ITM_TYP
+    nombre: Tipo de Elemento de Menú
+    tipo_api: numero
+    confianza: alta
+    muestras: 11
+    defaults:
+      42: '0'
+    tipos_objeto:
+    - 42
+  185:
+    clase_ros: O
+    const: MENU
+    nombre: Menu Object
+    tipo_api: objeto
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 38
+  188:
+    clase_ros: N
+    const: CMPRSSION_QLTY
+    nombre: Calidad de Compresión
+    tipo_api: numero
+    alternativas:
+    - FONT_STY
+    - PRMPT_FONT_STY
+    - EDT_X_POS
+    confianza: alta
+    muestras: 205
+    defaults:
+      30: '1'
+    tipos_objeto:
+    - 30
+  194:
+    clase_ros: B
+    const: MODAL
+    nombre: Modal
+    tipo_api: booleano
+    alternativas:
+    - RESIZE_ALLOWED
+    - HIDE_ON_EXIT
+    - CLS_ALLOWED (invertido)
+    confianza: media
+    muestras: 2
+    defaults:
+      78: '0'
+    tipos_objeto:
+    - 78
+  199:
+    clase_ros: B
+    const: MOUSE_NAVIGATE
+    nombre: Navegación del Ratón
+    tipo_api: booleano
+    alternativas:
+    - SUBCL_SUBOBJ
+    - HIDE
+    - WHITE_ON_BLACK
+    confianza: alta
+    muestras: 7
+    defaults:
+      30: '1'
+    tipos_objeto:
+    - 30
+  200:
+    clase_ros: B
+    const: MV_ALLOWED
+    nombre: Movimiento Permitido
+    tipo_api: booleano
+    alternativas:
+    - DIRTY_INFO
+    - SHOW_HORZ_SCRLBR (invertido)
+    - SUBCL_SUBOBJ (invertido)
+    confianza: alta
+    muestras: 3
+    tipos_objeto:
+    - 78
+  211:
+    clase_ros: T
+    const: NAME
+    nombre: Nombre
+    tipo_api: texto
+    confianza: alta
+    muestras: 880
+    tipos_objeto:
+    - 3
+    - 5
+    - 7
+    - 9
+    - 11
+    - 13
+    - 15
+    - 22
+    - 24
+    - 30
+    - 36
+    - 38
+    - 40
+    - 42
+    - 58
+    - 62
+    - 64
+    - 66
+    - 68
+    - 74
+    - 78
+    - 84
+    - 86
+  213:
+    clase_ros: B
+    const: KBRD_NAVIGABLE
+    nombre: Teclado de Navegación
+    tipo_api: booleano
+    confianza: alta
+    muestras: 135
+    defaults:
+      30: '1'
+    tipos_objeto:
+    - 30
+  214:
+    clase_ros: N
+    const: NAVIGATION_STY
+    nombre: Estilo de Navegación
+    tipo_api: numero
+    confianza: alta
+    muestras: 10
+    defaults:
+      7: '0'
+    tipos_objeto:
+    - 7
+  218:
+    clase_ros: T
+    const: NXT_NAVIGATION_BLK_NAM
+    nombre: Bloque de Datos de Navegación Siguiente
+    tipo_api: texto
+    alternativas:
+    - NXT_NAVIGATION_BLK_OBJ
+    confianza: alta
+    muestras: 6
+    tipos_objeto:
+    - 7
+  220:
+    clase_ros: T
+    const: NXT_NAVIGATION_ITM_NAM
+    nombre: Elemento de Navegación Siguiente
+    tipo_api: texto
+    alternativas:
+    - CHAR_MODE_LOGICAL_ATTR
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 30
+  241:
+    clase_ros: T
+    const: ORDR_BY_CLAUSE
+    nombre: Cláusula ORDER BY
+    tipo_api: texto
+    confianza: alta
+    muestras: 4
+    tipos_objeto:
+    - 7
+  245:
+    clase_ros: B
+    const: PRMRY_KEY
+    nombre: Clave Primaria
+    tipo_api: booleano
+    confianza: alta
+    muestras: 6
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  247:
+    clase_ros: O
+    const: PROG_UNIT
+    nombre: Program Unit Object
+    tipo_api: objeto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 22
+  252:
+    clase_ros: B
+    const: DEFERRED
+    nombre: Aplazado
+    tipo_api: booleano
+    alternativas:
+    - AUTO_QRY
+    - PRVNT_MSTRLESS_OPS
+    - SUBCL_SUBOBJ
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 66
+  253:
+    clase_ros: T
+    const: PREV_NAVIGATION_BLK_NAM
+    nombre: Bloque de Datos de Navegación Anterior
+    tipo_api: texto
+    alternativas:
+    - PREV_NAVIGATION_BLK_OBJ
+    confianza: alta
+    muestras: 6
+    tipos_objeto:
+    - 7
+  257:
+    clase_ros: B
+    const: QRY_ALLOWED
+    nombre: Consulta Permitida
+    tipo_api: booleano
+    confianza: alta
+    muestras: 112
+    defaults:
+      7: '1'
+      30: '1'
+    tipos_objeto:
+    - 7
+    - 30
+  258:
+    clase_ros: N
+    const: QRY_LEN
+    nombre: Longitud de Consulta
+    tipo_api: numero
+    confianza: alta
+    muestras: 146
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  259:
+    clase_ros: B
+    const: QRY_ONLY
+    nombre: Sólo Consulta
+    tipo_api: booleano
+    alternativas:
+    - SHOW_VOLUME
+    - UPDT_COMMIT
+    - RENDERED
+    confianza: media
+    muestras: 2
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  262:
+    clase_ros: O
+    const: RAD_BUT
+    nombre: Radio Button Object
+    tipo_api: objeto
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 30
+  264:
+    clase_ros: T
+    const: RDB_VAL
+    nombre: Valor de Botón de Radio
+    tipo_api: texto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 62
+  268:
+    clase_ros: N
+    const: RECS_DISP_COUNT
+    nombre: Número de Registros Mostrados
+    tipo_api: numero
+    confianza: alta
+    muestras: 11
+    defaults:
+      7: '1'
+    tipos_objeto:
+    - 7
+  269:
+    clase_ros: N
+    const: RECS_FETCHED_COUNT
+    nombre: Tamaño de Vector de Consulta
+    tipo_api: numero
+    alternativas:
+    - LOCK_MODE
+    - QRY_DAT_SRC_TYP
+    - DML_ARY_SIZ
+    confianza: media
+    muestras: 1
+    defaults:
+      7: '0'
+    tipos_objeto:
+    - 7
+  270:
+    clase_ros: N
+    const: DIST_BTWN_RECS
+    nombre: Distancia Entre Registros
+    tipo_api: numero
+    confianza: alta
+    muestras: 165
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  272:
+    clase_ros: O
+    const: REC_GRP
+    nombre: Record Group Object
+    tipo_api: objeto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 22
+  273:
+    clase_ros: T
+    const: REC_GRP_NAM
+    nombre: Grupo de Registros
+    tipo_api: texto
+    alternativas:
+    - REC_GRP_OBJ
+    confianza: alta
+    muestras: 14
+    tipos_objeto:
+    - 36
+  275:
+    clase_ros: T
+    const: REC_GRP_QRY
+    nombre: Consulta del Grupo de Registros
+    tipo_api: texto
+    confianza: media
+    muestras: 14
+    tipos_objeto:
+    - 64
+  276:
+    clase_ros: N
+    const: REC_GRP_TYP
+    nombre: Tipo de Grupo de Registros
+    tipo_api: numero
+    alternativas:
+    - PAR_MODSTR
+    - PAR_TYP
+    - PAR_MODTYP
+    confianza: alta
+    muestras: 6
+    defaults:
+      64: '0'
+    tipos_objeto:
+    - 64
+  277:
+    clase_ros: N
+    const: REC_ORNT
+    nombre: Orientación del Registro
+    tipo_api: numero
+    alternativas:
+    - PAR_TYP
+    - SCRLBR_ORNT
+    - PAR_MODTYP
+    confianza: alta
+    muestras: 10
+    defaults:
+      7: '0'
+    tipos_objeto:
+    - 7
+  278:
+    clase_ros: T
+    const: REC_VAT_GRP_NAM
+    nombre: Grupo de Atributos Visuales del Registro Actual
+    tipo_api: texto
+    confianza: alta
+    muestras: 13
+    tipos_objeto:
+    - 30
+  280:
+    clase_ros: O
+    const: REL
+    nombre: Relation Object
+    tipo_api: objeto
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 7
+  281:
+    clase_ros: B
+    const: HIDE_ON_EXIT
+    nombre: Ocultar al Salir
+    tipo_api: booleano
+    alternativas:
+    - INHRT_MNU
+    - DIRTY_INFO
+    - MV_ALLOWED
+    confianza: media
+    muestras: 1
+    defaults:
+      78: '0'
+    tipos_objeto:
+    - 78
+  283:
+    clase_ros: B
+    const: REQUIRED
+    nombre: Obligatorio
+    tipo_api: booleano
+    confianza: alta
+    muestras: 41
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  284:
+    clase_ros: T
+    const: RTRN_ITM
+    nombre: Elemento de Retorno
+    tipo_api: texto
+    confianza: alta
+    muestras: 40
+    tipos_objeto:
+    - 13
+  287:
+    clase_ros: B
+    const: HIDE
+    nombre: Hide Object
+    tipo_api: booleano
+    alternativas:
+    - FIRE_IN_QRY
+    - SUBCL_SUBOBJ (invertido)
+    - SUBCL_OBJGRP (invertido)
+    confianza: alta
+    muestras: 3
+    defaults:
+      68: '0'
+    tipos_objeto:
+    - 68
+  288:
+    clase_ros: T
+    const: PRMPT_FONT_NAM
+    nombre: Nombre de la Fuente del Prompt
+    tipo_api: texto
+    confianza: alta
+    muestras: 71
+    tipos_objeto:
+    - 30
+  290:
+    clase_ros: T
+    const: SCRLBR_CNV_NAM
+    nombre: Lienzo de Barra de Desplazamiento
+    tipo_api: texto
+    alternativas:
+    - SCRLBR_CNV_OBJ
+    confianza: alta
+    muestras: 3
+    tipos_objeto:
+    - 7
+  293:
+    clase_ros: N
+    por_tipo:
+      7:
+        const: SCRLBR_WID
+        nombre: Ancho de Barra de Desplazamiento
+        tipo_api: numero
+        confianza: alta
+        muestras: 5
+        acierto: 1.0
+        default: '0'
+      9:
+        const: HORZ_OBJ_OFST
+        nombre: Desplazamiento del Objeto Horizontal
+        tipo_api: numero
+        confianza: alta
+        muestras: 50
+        acierto: 1.0
+  294:
+    clase_ros: N
+    const: SCRLBR_X_POS
+    nombre: Posición X en la Barra de Desplazamiento
+    tipo_api: numero
+    confianza: alta
+    muestras: 3
+    defaults:
+      7: '0'
+    tipos_objeto:
+    - 7
+  295:
+    clase_ros: N
+    const: SCRLBR_Y_POS
+    nombre: Posición Y en la Barra de Desplazamiento
+    tipo_api: numero
+    confianza: alta
+    muestras: 3
+    defaults:
+      7: '0'
+    tipos_objeto:
+    - 7
+  296:
+    clase_ros: B
+    const: SHOW_SCRLBR
+    nombre: Mostrar Barra de Desplazamiento
+    tipo_api: booleano
+    confianza: alta
+    muestras: 11
+    defaults:
+      7: '0'
+    tipos_objeto:
+    - 7
+  299:
+    clase_ros: B
+    const: DISP_IN_KBRD_HLP
+    nombre: Visualizar en 'Ayuda del Teclado'
+    tipo_api: booleano
+    alternativas:
+    - FIRE_IN_QRY
+    - SUBCL_SUBOBJ (invertido)
+    - SUBCL_OBJGRP (invertido)
+    confianza: alta
+    muestras: 33
+    defaults:
+      68: '0'
+    tipos_objeto:
+    - 68
+  307:
+    clase_ros: T
+    const: TITLE
+    nombre: Título
+    tipo_api: texto
+    confianza: alta
+    muestras: 61
+    tipos_objeto:
+    - 3
+    - 13
+    - 22
+    - 36
+    - 78
+  311:
+    clase_ros: N
+    const: PRMPT_FONT_SIZ
+    nombre: Tamaño de la Fuente del Prompt
+    tipo_api: numero
+    confianza: alta
+    muestras: 71
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  313:
+    clase_ros: T
+    const: KBRD_HLP_TXT
+    nombre: Texto de la Ayuda del Teclado'
+    tipo_api: texto
+    confianza: alta
+    muestras: 10
+    tipos_objeto:
+    - 68
+  314:
+    clase_ros: O
+    const: TRIGGER
+    nombre: Trigger Object
+    tipo_api: objeto
+    confianza: alta
+    muestras: 64
+    tipos_objeto:
+    - 7
+    - 22
+    - 30
+  321:
+    clase_ros: T
+    const: UNCHKED_VAL
+    nombre: Valor si no está Comprobado
+    tipo_api: texto
+    alternativas:
+    - INIT_VAL
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 30
+  322:
+    clase_ros: B
+    const: UPDT_ALLOWED
+    nombre: Actualización Permitida
+    tipo_api: booleano
+    confianza: alta
+    muestras: 120
+    defaults:
+      7: '1'
+      30: '1'
+    tipos_objeto:
+    - 7
+    - 30
+  324:
+    clase_ros: B
+    const: UPDT_IF_NULL
+    nombre: Actualizar Sólo si es NULO
+    tipo_api: booleano
+    alternativas:
+    - SHOW_VOLUME
+    - UPDT_COMMIT
+    - RENDERED
+    confianza: media
+    muestras: 1
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  327:
+    clase_ros: T
+    const: TEXT
+    nombre: Valor de Elemento de Lista
+    tipo_api: texto
+    confianza: alta
+    muestras: 43
+    tipos_objeto:
+    - 86
+  328:
+    clase_ros: T
+    const: VAT_NAM
+    nombre: Grupo de Atributos Visuales
+    tipo_api: texto
+    confianza: alta
+    muestras: 249
+    defaults:
+      7: DEFAULT
+      9: DEFAULT
+      11: DEFAULT
+      30: DEFAULT
+      36: DEFAULT
+      42: DEFAULT
+    tipos_objeto:
+    - 3
+    - 7
+    - 9
+    - 11
+    - 30
+    - 36
+    - 42
+    - 62
+    - 78
+  330:
+    clase_ros: N
+    const: PRMPT_FONT_STY
+    nombre: Estilo de la Fuente del Prompt
+    tipo_api: numero
+    alternativas:
+    - ACCESS_KEY_STRID
+    - SIZING_STY
+    - PRMPT_READING_ORDR
+    confianza: alta
+    muestras: 63
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  331:
+    clase_ros: N
+    const: CALC_MODE
+    nombre: Modo de Cálculo
+    tipo_api: numero
+    confianza: alta
+    muestras: 14
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  332:
+    clase_ros: N
+    const: PRMPT_FONT_WGHT
+    nombre: Grosor de la Fuente del Prompt
+    tipo_api: numero
+    confianza: alta
+    muestras: 64
+    defaults:
+      30: '4'
+    tipos_objeto:
+    - 30
+  335:
+    clase_ros: N
+    const: PRMPT_FONT_SPCING
+    nombre: Espaciado de la Fuente del Prompt
+    tipo_api: numero
+    confianza: alta
+    muestras: 63
+    defaults:
+      30: '4'
+    tipos_objeto:
+    - 30
+  344:
+    clase_ros: T
+    const: COL_NAM
+    nombre: Nombre de Columna
+    tipo_api: texto
+    confianza: alta
+    muestras: 12
+    tipos_objeto:
+    - 30
+  347:
+    clase_ros: B
+    const: SHOW_VERT_SCRLBR
+    nombre: Mostrar Barra de Desplazamiento Vertical
+    tipo_api: booleano
+    alternativas:
+    - VALIDATE_FROM_LST
+    - SUBCL_SUBOBJ
+    - HIDE
+    confianza: alta
+    muestras: 208
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+    - 78
+  350:
+    clase_ros: N
+    const: VPRT_HGT
+    nombre: Altura de la Puerta de Vista
+    tipo_api: numero
+    confianza: alta
+    muestras: 4
+    tipos_objeto:
+    - 11
+  351:
+    clase_ros: N
+    const: VPRT_WID
+    nombre: Ancho de la Puerta de Vista
+    tipo_api: numero
+    confianza: alta
+    muestras: 4
+    tipos_objeto:
+    - 11
+  352:
+    clase_ros: N
+    const: VPRT_Y_POS_ON_CNV
+    nombre: Posición Y de la Puerta de Vista en el Lienzo
+    tipo_api: numero
+    alternativas:
+    - VPRT_X_POS_ON_CNV
+    - FONT_SIZ
+    - TAB_STY
+    confianza: alta
+    muestras: 3
+    defaults:
+      11: '0'
+    tipos_objeto:
+    - 11
+  353:
+    clase_ros: N
+    const: VPRT_X_POS_ON_CNV
+    nombre: Posición X de la Puerta de Vista en el Lienzo
+    tipo_api: numero
+    alternativas:
+    - FONT_SIZ
+    - TAB_STY
+    - PAR_TYP
+    confianza: alta
+    muestras: 3
+    defaults:
+      11: '0'
+    tipos_objeto:
+    - 11
+  355:
+    clase_ros: O
+    const: VIS_ATTR
+    nombre: Visual Attribute Object
+    tipo_api: objeto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 22
+  359:
+    clase_ros: T
+    const: WHERE_CLAUSE
+    nombre: Cláusula WHERE
+    tipo_api: texto
+    alternativas:
+    - DML_DAT_NAM
+    confianza: alta
+    muestras: 3
+    tipos_objeto:
+    - 7
+  360:
+    clase_ros: B
+    const: WHITE_ON_BLACK
+    nombre: Blanco sobre Negro
+    tipo_api: booleano
+    alternativas:
+    - SUBCL_SUBOBJ
+    - SUBCL_OBJGRP
+    - DIRTY_INFO (invertido)
+    confianza: alta
+    muestras: 7
+    defaults:
+      74: '0'
+    tipos_objeto:
+    - 74
+  361:
+    clase_ros: N
+    const: WIDTH
+    nombre: Ancho
+    tipo_api: numero
+    confianza: alta
+    muestras: 322
+    tipos_objeto:
+    - 9
+    - 11
+    - 30
+    - 36
+    - 62
+    - 78
+  363:
+    clase_ros: O
+    const: WINDOW
+    nombre: Window Object
+    tipo_api: objeto
+    confianza: media
+    muestras: 2
+    tipos_objeto:
+    - 22
+  364:
+    clase_ros: B
+    const: ENFRC_PRMRY_KEY
+    nombre: Forzar Clave Primaria
+    tipo_api: booleano
+    confianza: alta
+    muestras: 3
+    defaults:
+      7: '0'
+    tipos_objeto:
+    - 7
+  366:
+    clase_ros: N
+    const: TITLE_STRID
+    nombre: ID Cadena de Título
+    tipo_api: numero
+    confianza: alta
+    muestras: 61
+    defaults:
+      3: '0'
+    tipos_objeto:
+    - 3
+    - 13
+    - 22
+    - 36
+    - 78
+  367:
+    clase_ros: T
+    const: WND_NAM
+    nombre: Ventana
+    tipo_api: texto
+    alternativas:
+    - WND_OBJ
+    confianza: alta
+    muestras: 4
+    tipos_objeto:
+    - 11
+  369:
+    clase_ros: N
+    const: WIN_STY
+    nombre: Estilo de Ventana
+    tipo_api: numero
+    confianza: media
+    muestras: 1
+    defaults:
+      78: '0'
+    tipos_objeto:
+    - 78
+  370:
+    clase_ros: T
+    const: PRMRY_CNV
+    nombre: Lienzo Primario
+    tipo_api: texto
+    confianza: alta
+    muestras: 3
+    tipos_objeto:
+    - 78
+  372:
+    clase_ros: N
+    const: X_POS
+    nombre: Posición X
+    tipo_api: numero
+    confianza: alta
+    muestras: 291
+    defaults:
+      30: '0'
+      36: '0'
+    tipos_objeto:
+    - 9
+    - 30
+    - 36
+    - 62
+    - 78
+  373:
+    clase_ros: N
+    const: Y_POS
+    nombre: Posición Y
+    tipo_api: numero
+    confianza: alta
+    muestras: 291
+    defaults:
+      30: '0'
+      36: '0'
+    tipos_objeto:
+    - 9
+    - 30
+    - 36
+    - 62
+    - 78
+  374:
+    clase_ros: B
+    const: SHOW_HORZ_SCRLBR
+    nombre: Mostrar Barra de Desplazamiento Horizontal
+    tipo_api: booleano
+    alternativas:
+    - MAXIMIZE_ALLOWED
+    - SHOW_VERT_SCRLBR
+    - SUBCL_SUBOBJ
+    confianza: alta
+    muestras: 3
+    tipos_objeto:
+    - 78
+  380:
+    clase_ros: B
+    const: AUTO_HINT
+    nombre: Visualizar Indicación Automáticamente
+    tipo_api: booleano
+    alternativas:
+    - SHOW_VOLUME
+    - UPDT_COMMIT
+    - RENDERED
+    confianza: alta
+    muestras: 50
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  386:
+    clase_ros: N
+    const: GRAPHICS_TYP
+    nombre: Tipo de Gráficos
+    tipo_api: numero
+    confianza: alta
+    muestras: 50
+    tipos_objeto:
+    - 9
+  389:
+    clase_ros: N
+    const: ARROW_STY
+    nombre: Estilo de Flecha
+    tipo_api: numero
+    alternativas:
+    - GRA_FONT_WGHT
+    - GRA_FONT_SPCING
+    - GRA_TEXT_STRID
+    confianza: media
+    muestras: 2
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  394:
+    clase_ros: T
+    const: PRMPT
+    nombre: Prompt
+    tipo_api: texto
+    confianza: media
+    muestras: 62
+    tipos_objeto:
+    - 30
+  396:
+    clase_ros: N
+    const: PRMPT_JST
+    nombre: Justificación del Prompt
+    tipo_api: numero
+    confianza: alta
+    muestras: 50
+    defaults:
+      30: '3'
+    tipos_objeto:
+    - 30
+  398:
+    clase_ros: N
+    const: PRMPT_ATT_EDGE
+    nombre: Borde del Anexo del Prompt
+    tipo_api: numero
+    confianza: alta
+    muestras: 63
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  399:
+    clase_ros: N
+    const: PRMPT_ATT_OFST
+    nombre: Desplazamiento del Anexo del Prompt
+    tipo_api: numero
+    confianza: alta
+    muestras: 72
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  400:
+    clase_ros: N
+    const: PRMPT_ALIGN
+    nombre: Alineamiento del Prompt
+    tipo_api: numero
+    confianza: alta
+    muestras: 50
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  401:
+    clase_ros: N
+    const: PRMPT_ALIGN_OFST
+    nombre: Desplazamiento del Alineamiento del Prompt
+    tipo_api: numero
+    confianza: alta
+    muestras: 70
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  423:
+    clase_ros: N
+    const: HORZ_MARGN
+    nombre: Margen Horizontal
+    tipo_api: numero
+    alternativas:
+    - STRT_PRMPT_OFST
+    confianza: alta
+    muestras: 50
+    tipos_objeto:
+    - 9
+  424:
+    clase_ros: N
+    const: VERT_MARGN
+    nombre: Margen Vertical
+    tipo_api: numero
+    confianza: alta
+    muestras: 50
+    tipos_objeto:
+    - 9
+  426:
+    clase_ros: N
+    const: SCRLBR_WID
+    nombre: Ancho de Barra de Desplazamiento
+    tipo_api: numero
+    alternativas:
+    - HORZ_OBJ_OFST
+    confianza: alta
+    muestras: 50
+    tipos_objeto:
+    - 9
+  427:
+    clase_ros: N
+    const: STRT_PRMPT_OFST
+    nombre: Desplazamiento del Prompt Inicial
+    tipo_api: numero
+    confianza: alta
+    muestras: 50
+    tipos_objeto:
+    - 9
+  435:
+    clase_ros: N
+    const: INTERNAL_LIN_WID
+    nombre: Ancho de Línea
+    tipo_api: numero
+    confianza: alta
+    muestras: 42
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  436:
+    clase_ros: N
+    const: INTERNAL_ROTATION_ANGLE
+    nombre: Angulo de Rotación
+    tipo_api: numero
+    alternativas:
+    - GRA_FONT_STY
+    - GRA_FONT_COLOR_CODE
+    - CAP_STY
+    confianza: alta
+    muestras: 41
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  437:
+    clase_ros: T
+    const: EDGE_FORE_COLOR
+    nombre: Color del Borde del Primer Plano
+    tipo_api: texto
+    confianza: alta
+    muestras: 40
+    tipos_objeto:
+    - 9
+  438:
+    clase_ros: N
+    const: GRA_FONT_COLOR_CODE
+    nombre: ''
+    tipo_api: numero
+    alternativas:
+    - CLIP_HGT
+    - FRAME_TTL_FONT_SIZ
+    - FRAME_TTL_SPCING
+    confianza: media
+    muestras: 40
+    tipos_objeto:
+    - 9
+  439:
+    clase_ros: T
+    const: EDGE_BACK_COLOR
+    nombre: Color del Fondo del Borde
+    tipo_api: texto
+    confianza: alta
+    muestras: 45
+    tipos_objeto:
+    - 9
+  441:
+    clase_ros: T
+    const: EDGE_PAT
+    nombre: Trama del Borde
+    tipo_api: texto
+    confianza: alta
+    muestras: 48
+    tipos_objeto:
+    - 9
+  443:
+    clase_ros: N
+    const: CAP_STY
+    nombre: Estilo del Extremo
+    tipo_api: numero
+    alternativas:
+    - DASH_STY
+    - GRA_FONT_STY
+    - GRA_FONT_COLOR_CODE
+    confianza: alta
+    muestras: 40
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  444:
+    clase_ros: N
+    const: DASH_STY
+    nombre: Estilo de Guión
+    tipo_api: numero
+    alternativas:
+    - GRA_FONT_STY
+    - GRA_FONT_COLOR_CODE
+    - LIN_SPCING
+    confianza: alta
+    muestras: 40
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  445:
+    clase_ros: N
+    const: JOIN_STY
+    nombre: Estilo de la Unión
+    tipo_api: numero
+    confianza: alta
+    muestras: 45
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  448:
+    clase_ros: N
+    const: LANG_DIR
+    nombre: Dirección
+    tipo_api: numero
+    alternativas:
+    - CSTM_SPCING
+    - VERT_JST
+    - GRA_FONT_COLOR_CODE
+    confianza: baja
+    muestras: 37
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  449:
+    clase_ros: N
+    const: LIN_SPCING
+    nombre: Espaciado de Línea
+    tipo_api: numero
+    alternativas:
+    - LANG_DIR
+    - CSTM_SPCING
+    - VERT_JST
+    confianza: alta
+    muestras: 37
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  450:
+    clase_ros: B
+    const: FONT_SCALEABLE
+    nombre: Fuente Escalable
+    tipo_api: booleano
+    alternativas:
+    - FIXED_BOUNDING_BX
+    - SHOW_SCRLBR
+    - SUBCL_OBJGRP
+    confianza: alta
+    muestras: 37
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  451:
+    clase_ros: B
+    const: WRAP_TXT
+    nombre: Texto de Ajuste
+    tipo_api: booleano
+    alternativas:
+    - BOUNDING_BX_SCALABLE
+    - DIRTY_INFO
+    - DITHER
+    confianza: alta
+    muestras: 40
+    defaults:
+      9: '1'
+    tipos_objeto:
+    - 9
+  452:
+    clase_ros: B
+    const: BOUNDING_BX_SCALABLE
+    nombre: Recuadro Delimitador Escalable
+    tipo_api: booleano
+    alternativas:
+    - DIRTY_INFO
+    - DITHER
+    - ALLOW_MLT_LIN_PRMPTS
+    confianza: alta
+    muestras: 40
+    defaults:
+      9: '1'
+    tipos_objeto:
+    - 9
+  453:
+    clase_ros: B
+    const: FIXED_BOUNDING_BX
+    nombre: Recuadro Delimitador Fijo
+    tipo_api: booleano
+    alternativas:
+    - SHOW_SCRLBR
+    - SUBCL_OBJGRP
+    - SUBCL_SUBOBJ
+    confianza: alta
+    muestras: 37
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  454:
+    clase_ros: B
+    const: SHOW_SCRLBR
+    nombre: Mostrar Barra de Desplazamiento
+    tipo_api: booleano
+    alternativas:
+    - SUBCL_OBJGRP
+    - SUBCL_SUBOBJ
+    - ALLOW_STRT_ATT_PRMPTS
+    confianza: baja
+    muestras: 37
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  455:
+    clase_ros: N
+    const: HORZ_ORGN
+    nombre: Origen Horizontal
+    tipo_api: numero
+    confianza: alta
+    muestras: 39
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  456:
+    clase_ros: N
+    const: VERT_ORGN
+    nombre: Origen Vertical
+    tipo_api: numero
+    alternativas:
+    - LIN_SPCING
+    - LANG_DIR
+    - CSTM_SPCING
+    confianza: alta
+    muestras: 41
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  457:
+    clase_ros: N
+    const: HORZ_JST
+    nombre: Justificación Horizontal
+    tipo_api: numero
+    alternativas:
+    - LIN_SPCING
+    - LANG_DIR
+    - CSTM_SPCING
+    confianza: alta
+    muestras: 40
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  458:
+    clase_ros: N
+    const: CSTM_SPCING
+    nombre: Espaciado Personalizado
+    tipo_api: numero
+    alternativas:
+    - VERT_JST
+    - GRA_FONT_COLOR_CODE
+    - CLIP_HGT
+    confianza: baja
+    muestras: 37
+    defaults:
+      9: '0'
+    tipos_objeto:
+    - 9
+  461:
+    clase_ros: O
+    const: CMPTXT
+    nombre: Compound Text Object
+    tipo_api: objeto
+    confianza: alta
+    muestras: 43
+    tipos_objeto:
+    - 9
+  463:
+    clase_ros: O
+    const: TEXT_SEG
+    nombre: Simple Text Object
+    tipo_api: objeto
+    confianza: alta
+    muestras: 43
+    tipos_objeto:
+    - 84
+  464:
+    clase_ros: P
+    por_tipo:
+      42:
+        const: MNU_ITM_CODE
+        nombre: Código de Elemento de Menú
+        tipo_api: texto
+        confianza: media
+        muestras: 8
+        acierto: 1.0
+        default: null;
+      58:
+        const: PGU_TXT
+        nombre: Texto de la Unidad de Programa
+        tipo_api: texto
+        confianza: alta
+        muestras: 78
+        acierto: 1.0
+      68:
+        const: TRG_TXT
+        nombre: 'Texto del Disparador '
+        tipo_api: texto
+        confianza: alta
+        muestras: 158
+        acierto: 1.0
+  465:
+    clase_ros: N
+    const: LONGITUD_CODIGO
+    nombre: Longitud del binario de código (interno)
+    tipos_objeto:
+    - 42
+    - 58
+    - 68
+    confianza: manual
+    semantica: longitud en bytes del BLONG de la propiedad 464; no aporta al análisis
+    evidencia: 'ON-CLEAR-DETAILS: 465=885 y el binario 464 mide 888 bytes (885 + relleno); igual en todos los triggers.'
+  470:
+    clase_ros: N
+    const: NEWDEFER_REQ_ENF
+    nombre: Diferir Aplicación Obligatoria
+    tipo_api: numero
+    confianza: baja
+    muestras: 2
+    defaults:
+      22: '1'
+    tipos_objeto:
+    - 22
+  477:
+    clase_ros: T
+    const: FORMULA
+    nombre: Fórmula
+    tipo_api: texto
+    confianza: alta
+    muestras: 3
+    tipos_objeto:
+    - 30
+  478:
+    clase_ros: N
+    const: SUMM_FUNC
+    nombre: Función Totalizar
+    tipo_api: numero
+    alternativas:
+    - IMG_FMT
+    confianza: alta
+    muestras: 9
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  479:
+    clase_ros: T
+    const: SUMM_ITM_NAM
+    nombre: Elemento de Total
+    tipo_api: texto
+    confianza: alta
+    muestras: 9
+    tipos_objeto:
+    - 30
+  480:
+    clase_ros: N
+    const: ITMS_DISP
+    nombre: Número de Elementos Visualizados
+    tipo_api: numero
+    alternativas:
+    - OLE_RESIZ_STY
+    - CHK_BX_OTHER_VALS
+    - PRMPT_DISP_STY
+    confianza: media
+    muestras: 13
+    defaults:
+      30: '1'
+    tipos_objeto:
+    - 30
+  521:
+    clase_ros: T
+    const: DML_DAT_NAM
+    nombre: Nombre Destino de Datos DML
+    tipos_objeto:
+    - 7
+    confianza: manual
+    semantica: vacío = el destino DML es el mismo origen de datos de consulta (QRY_DAT_SRC_NAM, ROS 522)
+    evidencia: 'STKC007: BDETA graba ''STKC007'' y la API devuelve DML_DAT_NAM=''STKC007''. BDOCU graba '''' y la API devuelve
+      DML_DAT_NAM=''"ADRE"."STK_DOCUMENTO"'', que es su QRY_DAT_SRC_NAM. La calibración automática no lo puede ver porque
+      el valor grabado ('''') difiere del valor efectivo que informa la API.
+
+      '
+  522:
+    clase_ros: T
+    const: QRY_DAT_SRC_NAM
+    nombre: Nombre del Origen de Datos de Consulta
+    tipo_api: texto
+    alternativas:
+    - DML_DAT_NAM
+    confianza: alta
+    muestras: 6
+    tipos_objeto:
+    - 7
+  528:
+    clase_ros: B
+    const: DB_BLK
+    nombre: Bloque de Datos de Base de Datos
+    tipo_api: booleano
+    alternativas:
+    - UPDT_ALLOWED (invertido)
+    - INSRT_ALLOWED (invertido)
+    - DEL_ALLOWED (invertido)
+    confianza: alta
+    muestras: 11
+    defaults:
+      7: '1'
+    tipos_objeto:
+    - 7
+  529:
+    clase_ros: N
+    const: QRY_DAT_SRC_TYP
+    nombre: Tipo de Origen de Datos de Consulta
+    tipo_api: numero
+    confianza: alta
+    muestras: 13
+    tipos_objeto:
+    - 7
+  530:
+    clase_ros: B
+    const: QRY_ALL_RECS
+    nombre: Consultar Todos los Registros
+    tipo_api: booleano
+    alternativas:
+    - DIRTY_INFO
+    - LST_IN_BLK_MNU
+    - UPDT_CHANGED_COLS (invertido)
+    confianza: media
+    muestras: 1
+    defaults:
+      7: '0'
+    tipos_objeto:
+    - 7
+  531:
+    clase_ros: N
+    const: DML_DAT_TYP
+    nombre: Tipo Destino de Datos DML
+    tipo_api: numero
+    alternativas:
+    - QRY_DAT_SRC_TYP
+    - REC_ORNT
+    - PAR_TYP
+    confianza: alta
+    muestras: 11
+    defaults:
+      7: '1'
+    tipos_objeto:
+    - 7
+  535:
+    clase_ros: T
+    const: TOOLTIP_VAT_GRP
+    nombre: Grupo de Atributos Visuales de Indicación de Herramienta
+    tipo_api: texto
+    alternativas:
+    - TBP_NAM
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 30
+  577:
+    clase_ros: O
+    const: REFERENCIAS_COMPILADAS
+    nombre: Lista de referencias cruzadas compiladas (interno)
+    tipos_objeto:
+    - 22
+    confianza: manual
+    semantica: 'apunta a la lista de objetos tipo 100 (''BLOQUE.ITEM'' / ''PARAMETER.X''), cuyos hijos tipo 19 nombran las
+      unidades de código que los usan (program units por nombre, triggers por nombre interno)
+
+      '
+    evidencia: 'STKC007: 577 -> nodo 491 (tipo 101) con 122 hijos tipo 100, p. ej. ''PARAMETER.P_DOCU_CLAVE''.'
+  598:
+    clase_ros: N
+    const: TRG_INTERNAL_TYP
+    nombre: Trigger Internal Type
+    tipo_api: numero
+    confianza: alta
+    muestras: 3
+    defaults:
+      68: '0'
+    tipos_objeto:
+    - 68
+  612:
+    clase_ros: T
+    const: SCRLBR_TBP_NAM
+    nombre: Página con Pestaña de Barra de Desplazamiento
+    tipo_api: texto
+    alternativas:
+    - DML_DAT_NAM
+    confianza: alta
+    muestras: 3
+    tipos_objeto:
+    - 7
+  621:
+    clase_ros: N
+    const: TEXT_STRID
+    nombre: ID Cadena de Texto de Gráfico
+    tipo_api: numero
+    confianza: alta
+    muestras: 43
+    tipos_objeto:
+    - 86
+  629:
+    clase_ros: B
+    const: FIRE_IN_QRY
+    nombre: Activar en Modo Introducir Consulta
+    tipo_api: booleano
+    alternativas:
+    - SUBCL_SUBOBJ (invertido)
+    - SUBCL_OBJGRP (invertido)
+    confianza: baja
+    muestras: 79
+    defaults:
+      68: '1'
+    tipos_objeto:
+    - 68
+    tipos_sin_mapear:
+    - 42
+  675:
+    clase_ros: B
+    const: SHARE_LIB
+    nombre: Compartir Biblioteca con Pantalla
+    tipo_api: booleano
+    alternativas:
+    - SUBCL_SUBOBJ
+    - SUBCL_OBJGRP
+    - USE_SECURITY
+    confianza: media
+    muestras: 1
+    tipos_objeto:
+    - 38
+  685:
+    clase_ros: T
+    const: SUMM_BLK_NAM
+    nombre: Bloque de Total
+    tipo_api: texto
+    alternativas:
+    - OWNER
+    confianza: alta
+    muestras: 9
+    tipos_objeto:
+    - 30
+  704:
+    clase_ros: T
+    const: SUB_MNU_NAM
+    nombre: Nombre de Submenú
+    tipo_api: texto
+    alternativas:
+    - SUB_MNU_OBJ
+    confianza: alta
+    muestras: 4
+    tipos_objeto:
+    - 42
+  717:
+    clase_ros: N
+    por_tipo:
+      22:
+        const: RUNTIME_COMP
+        nombre: Modo de Compatibilidad de Ejecución
+        tipo_api: numero
+        confianza: media
+        muestras: 2
+        acierto: 1.0
+        alternativas:
+        - VALIDATION_UNIT
+        - ISOLATION_MODE
+        - PAR_MODSTR
+      38:
+        const: ROLE_COUNT
+        nombre: Recuento de Roles
+        tipo_api: numero
+        confianza: baja
+        muestras: 1
+        acierto: 1.0
+        default: '0'
+        alternativas:
+        - PAR_MODSTR
+        - PAR_TYP
+        - PAR_MODTYP
+  721:
+    clase_ros: N
+    const: PRMPT_STRID
+    nombre: ID Cadena de Prompt
+    tipo_api: numero
+    confianza: alta
+    muestras: 62
+    defaults:
+      30: '0'
+    tipos_objeto:
+    - 30
+  725:
+    clase_ros: N
+    const: KBRD_HLP_TXT_STRID
+    nombre: ID Cadena de Texto para 'Ayuda de Teclado'
+    tipo_api: numero
+    confianza: alta
+    muestras: 10
+    defaults:
+      68: '0'
+    tipos_objeto:
+    - 68
+  728:
+    clase_ros: N
+    const: PARAM_INIT_VAL_STRID
+    nombre: ID Cadena de Valor Inicial de Parámetro
+    tipo_api: numero
+    confianza: alta
+    muestras: 17
+    defaults:
+      24: '0'
+    tipos_objeto:
+    - 24
+  730:
+    clase_ros: N
+    const: BTN_1_LBL_STRID
+    nombre: ID Cadena de Etiqueta de Botón 1
+    tipo_api: numero
+    confianza: alta
+    muestras: 6
+    tipos_objeto:
+    - 3
+  731:
+    clase_ros: N
+    const: BTN_2_LBL_STRID
+    nombre: ID Cadena de Etiqueta de Botón 2
+    tipo_api: numero
+    confianza: alta
+    muestras: 6
+    tipos_objeto:
+    - 3
+  736:
+    clase_ros: N
+    const: VALIDATION_UNIT
+    nombre: Unidad de Validación
+    tipo_api: numero
+    alternativas:
+    - ISOLATION_MODE
+    - PAR_MODSTR
+    - MNU_STY
+    confianza: baja
+    muestras: 2
+    defaults:
+      22: '0'
+    tipos_objeto:
+    - 22
+  751:
+    clase_ros: T
+    const: INIT_VAL
+    nombre: Valor Inicial
+    tipo_api: texto
+    confianza: media
+    muestras: 30
+    tipos_objeto:
+    - 30
+  753:
+    clase_ros: T
+    const: LOWEST_ALLOWED_VAL
+    nombre: Valor Mínimo Permitido
+    tipo_api: texto
+    confianza: alta
+    muestras: 8
+    tipos_objeto:
+    - 30
+  754:
+    clase_ros: T
+    const: PARAM_INIT_VAL_NORMALIZADO
+    nombre: Valor inicial del parámetro normalizado (interno)
+    tipos_objeto:
+    - 24
+    confianza: manual
+    semantica: copia interna de PARAM_INIT_VAL (ROS 116) en formato canónico; usar 116
+    evidencia: 'P_FEC_INIC_SISTEMA: 116=''01/04/1997'', 754=''01-04- 1997 00:00:00''; P_EMPRESA: 116=''1'', 754=''1''.'
+  762:
+    clase_ros: N
+    const: SCRLBR_LEN
+    nombre: Longitud de la Barra de Desplazamiento
+    tipo_api: numero
+    confianza: alta
+    muestras: 5
+    defaults:
+      7: '0'
+    tipos_objeto:
+    - 7
+  815:
+    clase_ros: B
+    const: DIRTY_INFO
+    nombre: ''
+    tipo_api: booleano
+    alternativas:
+    - SUBCL_SUBOBJ (invertido)
+    - SUBCL_OBJGRP (invertido)
+    - WHITE_ON_BLACK (invertido)
+    confianza: alta
+    muestras: 654
+    defaults:
+      15: '1'
+      24: '1'
+      30: '1'
+      40: '1'
+      42: '1'
+      58: '1'
+      64: '1'
+      68: '1'
+      74: '1'
+    tipos_objeto:
+    - 3
+    - 7
+    - 9
+    - 11
+    - 13
+    - 15
+    - 22
+    - 24
+    - 30
+    - 36
+    - 38
+    - 40
+    - 42
+    - 58
+    - 62
+    - 64
+    - 68
+    - 74
+    - 78
+    - 86

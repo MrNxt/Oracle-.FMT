@@ -1,0 +1,2161 @@
+.ATTACH LIBRARY Lib END NOCONFIRM
+
+
+function fl_devu_sald_gs (p_cli_codi in number) return number  is
+  v_saldo number;
+begin
+
+
+  Select sum(decode(tm.TMOV_IND_DBCR_CTA, 'C', b.cuo_saldo_mon*-1, b.cuo_saldo_mon)) saldo
+  into v_saldo
+  from fin_documento a, fin_cuota b, gen_tipo_mov tm
+  where a.doc_clave = b.cuo_clave_doc
+  and tm.tmov_codigo = a.doc_tipo_mov
+  and a.doc_cli = p_cli_codi
+  and a.doc_mon = 1
+  and b.cuo_saldo_mon <> 0
+  and a.doc_empr = 1;
+
+
+  return(nvl(v_saldo,0));
+
+  Exception
+   When no_data_found then
+     return 0;
+  
+end;
+
+function fl_devu_sald_us (p_cli_codi in number) return number  is
+  v_saldo number;
+begin
+ 
+  
+  Select sum(decode(tm.TMOV_IND_DBCR_CTA, 'C', b.cuo_saldo_mon*-1, b.cuo_saldo_mon)) saldo
+  into v_saldo
+  from fin_documento a, fin_cuota b, gen_tipo_mov tm
+  where a.doc_clave = b.cuo_clave_doc
+  and tm.tmov_codigo = a.doc_tipo_mov
+  and a.doc_cli = p_cli_codi
+  and a.doc_mon = 2
+  and b.cuo_saldo_mon <> 0
+  and a.doc_empr = 1;
+
+
+  return(nvl(v_saldo,0));
+
+  Exception
+   When no_data_found then
+     return 0;
+  
+end;
+
+function fl_devu_seri_traza (p_art_codi in number, p_docu_clave in number) return varchar2 is
+cursor c_traza is
+select tra_nro_serie
+from stk_trazabilidad
+where tra_articulo = p_art_codi
+and tra_clave_fac_stk = p_docu_clave
+order by tra_nro_serie;
+  
+ v_tra_nro_serie varchar2(15) := ' '; 
+begin
+  
+  for x in c_traza loop
+  	 v_tra_nro_serie := x.tra_nro_serie;  
+  end loop;	
+  
+ return v_tra_nro_serie;  
+ 
+  Exception
+  	  When others then
+  	     return v_tra_nro_serie;
+end;
+
+FUNCTION FL_FORMAT_MASK(miNomItem IN VARCHAR2, miCantDecimales IN NUMBER)
+RETURN VARCHAR2 IS
+
+/* esta funcion la hice porque no funciona el GET_ITEM_PROPERTY para
+    obtener el FORMAT_MASK de un item si es que el mismo se estableció
+    programáticamente. Esta función es una pequeña variante de la
+    procedure PP_FORMAT_MASK y a diferencia de ésta, devuelve el Formato en
+    vez de establecerlo.
+*/
+  miLongMax number; /* Longitud máxima */
+  miDecimales VARCHAR2(10); /* Formato de decimales */
+  miEnteros VARCHAR2(20); /* Formato de la parte entera */
+  miItemId ITEM; /* Identificador del item */
+  miNuevoFormato VARCHAR2(20); /* Nuevo formato de máscara */
+  miCantMaxEnt NUMBER := 0; /* Cantidad máxima de enteros */
+  miTotDecimales NUMBER := 0;
+BEGIN
+BREAK;
+  miItemId := FIND_ITEM(miNomItem);
+  IF Id_Null(miItemId) THEN
+     PL_EXHIBIR_ERROR('No existe el item: '|| miNomItem);
+  END IF;
+
+  miDecimales := 'D0000';
+  miEnteros   := '999G999G999G990';
+
+  miLongMax := GET_ITEM_PROPERTY(miItemId,MAX_LENGTH);
+
+  IF miCantDecimales > 0 THEN
+     miTotDecimales := miCantDecimales + 1; /* +1 por el punto decimal */
+  END IF;
+
+  miCantMaxEnt := miLongMax - miCantDecimales - 1;
+  miNuevoFormato := SUBSTR(miEnteros, 15 - miCantMaxEnt)|| SUBSTR(miDecimales, 1 ,miTotDecimales);
+  IF SUBSTR(miNuevoFormato,1,1)='G' THEN
+     /* el primer caracter de formato no debe ser 'G' */
+     miNuevoFormato := SUBSTR(miEnteros, 15 - miCantMaxEnt + 1)|| SUBSTR(miDecimales, 1 ,miTotDecimales);
+  END IF;
+  RETURN miNuevoFormato;
+END;
+
+procedure pl_imprimir_factura(p_fin_clave     in number,
+                              p_forma_entrega in varchar default null) is
+
+  --cursor para la cabecera
+  cursor c_cab is
+    select f.doc_clave,
+           f.doc_nro_doc,
+           f.doc_suc,
+           f.doc_fec_doc,
+           decode(f.doc_cli, null, f.doc_cli_nom, cli_nom) cli_desc,
+           decode(f.doc_cli, null, f.doc_cli_tel, cli_tel) cli_tel,
+           decode(f.doc_cli, null, f.doc_cli_dir, cli_dir) cli_dir,
+           decode(f.doc_cli,
+                  null,
+                  (to_char(f.doc_ruc_nuevo) || '-' || to_char(f.doc_ruc_dv)),
+                  (to_char(nvl(c.cli_ruc_nuevo, 44444401)) || '-' ||
+                  to_char(nvl(c.cli_ruc_dv, 7)))) cli_ruc,
+           f.doc_cli,
+           --f.doc_login,
+           g.oper_nombre,
+           f.doc_legajo,
+           f.doc_neto_exen_mon,
+           f.doc_neto_grav_mon,
+           f.doc_iva_mon,
+           f.doc_neto_exen_loc,
+           f.doc_neto_grav_loc,
+           f.doc_iva_loc,
+           f.doc_mon,
+           s.docu_obs,
+           m.mon_dec_imp,
+           m.mon_desc,
+           decode(nvl(f.doc_ind_cuota, 'N'), 'S', 'CREDITO', 'CONTADO') tipo_fact,
+           nvl(f.doc_ind_cheque_adel, 'N') doc_ind_cheque_adel,
+           s.docu_clave,
+           nvl(c.cli_indi_impr_sald_fact, 'S') cli_indi_impr_sald_fact,
+           doc_form_pago
+      from fin_documento f,
+           stk_documento s,
+           gen_moneda    m,
+           fin_cliente   c,
+           gen_operador  g
+     where s.docu_clave = f.doc_clave_stk
+       and f.doc_mon = m.mon_codigo
+       and g.oper_login = f.doc_login
+       and f.doc_cli = c.cli_codigo(+) --necesario para clientes esporadicos.....
+       and f.doc_clave = p_fin_clave;
+
+  --cursor para el detalle
+  cursor c_det is
+    select d.deta_clave_doc,
+           d.deta_nro_item,
+           d.deta_imp_neto_mon,
+           d.deta_iva_mon,
+           d.deta_cant,
+           d.deta_desc_larg,
+           a.art_codigo,
+           
+           replace(a.art_desc, chr(9), ' ') art_desc,
+           
+           a.art_tipo,
+           a.art_unid_med,
+           nvl(a.art_indi_traza, 'N') art_indi_traza,
+           a.art_impu
+    
+      from fin_documento     f,
+           stk_documento     s,
+           stk_documento_det d,
+           stk_articulo      a
+     where s.docu_clave = f.doc_clave_stk
+       and s.docu_clave = d.deta_clave_doc
+       and d.deta_art = a.art_codigo
+       and f.doc_clave = p_fin_clave
+		union
+    select d.det_clave_doc,
+           d.det_nro_item,
+           d.det_neto_mon,
+           d.det_iva_mon,
+           d.det_cant,
+           a.art_desc,
+           a.art_codigo,
+           
+           replace(a.art_desc, chr(9), ' ') art_desc,
+           
+           a.art_tipo,
+           a.art_unid_med,
+           nvl(a.art_indi_traza, 'N') art_indi_traza,
+           a.art_impu
+    
+      from fin_documento     f,
+           fac_documento_det d,
+           stk_articulo      a
+     where d.det_clave_doc = f.doc_clave
+       and a.art_codigo = d.det_art
+       and a.art_codigo = 28112013 --articulo de anticipo
+       and f.doc_clave = p_fin_clave
+     order by 2
+     ;
+
+  --cursor para el detalle de remisiones
+  cursor c_deta_rem is
+    select deta_nro_rem
+      from fin_documento f, stk_documento s, stk_documento_det d
+     where s.docu_clave = f.doc_clave_stk
+       and s.docu_clave = d.deta_clave_doc
+       and f.doc_clave = p_fin_clave
+     group by deta_nro_rem
+     order by deta_nro_rem;
+
+  --cursor para cuotas....
+  cursor c_cuot is
+    select cuo_fec_vto, cuo_imp_mon
+      from fin_cuota
+     where cuo_clave_doc = p_fin_clave
+     order by cuo_fec_vto;
+
+  --variables para la cabecera
+  v_doc_clave           number;
+  v_doc_suc             number(2);
+  v_mon_desc            VARCHAR2(20);
+  v_tipo_fact           VARCHAR2(10);
+  v_doc_nro_doc         number;
+  v_doc_fec_doc         date;
+  v_cli_desc            VARCHAR2(40);
+  v_cli_ruc             VARCHAR2(20);
+  v_cli_tel             VARCHAR2(15);
+  v_cli_dir             VARCHAR2(40);
+  v_doc_cli             number;
+  v_doc_ind_cheque_adel VARCHAR2(1);
+
+  v_doc_login      VARCHAR2(40);
+  v_doc_legajo     number;
+  v_doc_mon        number;
+  v_indi_entr_cabe VARCHAR2(1) := 'N'; --Indicador q determina si entro o no en el loop de la cabecara
+
+  V_MEN_MENSAJE_DESC varchar2(451);
+
+  v_cant_items number := 0;
+
+  v_art_indi_traza varchar2(1);
+  v_forma_entrega  varchar2(15);
+
+  ---------------------------------------------------------
+  --variables para las cuotas
+  v_cont_cuot number := 0;
+
+  v_impo_cuot_01 number;
+  v_impo_cuot_02 number;
+  v_impo_cuot_03 number;
+  v_impo_cuot_04 number;
+  v_impo_cuot_05 number;
+  v_impo_cuot_06 number;
+  v_impo_cuot_07 number;
+  v_impo_cuot_08 number;
+  v_impo_cuot_09 number;
+  v_impo_cuot_10 number;
+  v_impo_cuot_11 number;
+  v_impo_cuot_12 number;
+
+  v_venc_cuot_01 date;
+  v_venc_cuot_02 date;
+  v_venc_cuot_03 date;
+  v_venc_cuot_04 date;
+  v_venc_cuot_05 date;
+  v_venc_cuot_06 date;
+  v_venc_cuot_07 date;
+  v_venc_cuot_08 date;
+  v_venc_cuot_09 date;
+  v_venc_cuot_10 date;
+  v_venc_cuot_11 date;
+  v_venc_cuot_12 date;
+  --------------------------------------------------------
+
+  v_imp_cuo_1 number;
+  v_imp_cuo_2 number;
+  v_imp_cuo_3 number;
+
+  --variables para el detalle
+  v_deta_clave_doc    number;
+  v_deta_nro_item     number;
+  v_deta_imp_neto_mon number;
+  v_deta_iva_mon      number;
+  v_deta_cant         number;
+  v_deta_desc_larg    varchar2(500);
+  v_art_codigo        number;
+  v_art_desc          varchar2(80);
+  v_art_tipo          number; --tipo de articulo 1 = adquirido 2 = producido
+  v_art_unid_med      VARCHAR2(2);
+  -----------------------------------------------------------
+
+  ----------------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------------------------
+  -- constantes
+  -- estas constantes son para controlar la impresion de la factura
+  -- difieren por empresa, ya que cada una tiene formato diferente
+  -- de factura. luis fedriani 19/11/1999
+  v_max_renglon      number := 50; --cantidad máxima de letras que entran por linea 30
+  v_tabulador        number := 36; --tabulador para las siguientes lineas de la descripcion 27
+  v_max_lineas       number := 18; --cantidad máxima de líneas que entran en una factura.
+  v_max_tope_palabra number := 9; -- cantidad maxima de letras en una palabra para que no se corte y se envie a la siguiente linea la palabra completa
+
+  -- variables
+  v_cantidad       number;
+  v_formato        varchar2(20);
+  v_formato_precio varchar2(20);
+  v_formato_loc    varchar2(20);
+  v_formato_cant   varchar2(20);
+  v_remision       varchar2(200) := null;
+  v_num_txt        VARCHAR2(200) := ' ';
+  v_num_txt_1      VARCHAR2(120) := ' ';
+  v_num_txt_2      VARCHAR2(150) := ' ';
+  v_num_txt_3      VARCHAR2(70) := ' ';
+  v_impresora      text_io.file_type;
+  v_path_impresora varchar2(50) := null;
+  v_art_desc_1     VARCHAR2(1100);
+  v_desc_larga     VARCHAR2(1100);
+  v_mensaje        varchar2(1100);
+  v_imp_exen       number;
+  v_imp_grav       number;
+
+  v_neto_exen_mon number := 0;
+  v_neto_grav_mon number := 0;
+  v_neto_tot_mon  number := 0;
+
+  v_iva_mon       number := 0;
+  v_tot_mon       number := 0;
+  v_tot_loc       number := 0;
+  v_subtotal_grav number;
+  v_subtotal_exen number;
+  v_precio        number;
+  v_items         integer := 0;
+  v_lineas        integer := 0;
+  v_dec_imp       number;
+  v_tipo_iva      varchar2(5);
+
+  impresoranoregistrada exception;
+  pragma exception_init(impresoranoregistrada, -302000);
+  v_alert         number;
+  v_tipo_pag_cont varchar2(30) := '.';
+
+  v_sald_gs number := 0;
+  v_sald_us number := 0;
+
+  v_cli_indi_impr_sald_fact varchar2(1) := 'S';
+
+  v_doc_form_pago number;
+
+  v_imp_grav_5  number := 0;
+  v_imp_grav_10 number := 0;
+
+  v_tota_imp_grav_5  number := 0;
+  v_tota_imp_grav_10 number := 0;
+
+  v_tota_iva_5  number;
+  v_tota_iva_10 number;
+  v_mon         number;
+
+Begin
+
+  select doc_mon
+    into v_mon
+    from fin_documento
+   where doc_clave = p_fin_clave;
+
+  --asignar variables para la cabecera
+  for x in c_cab loop
+  
+    --Debe imprimir con 2 decimales en el caso de facturas en dólares.
+    if x.doc_mon = 2 then
+      x.mon_dec_imp := 2;
+    end if;
+  
+    v_doc_clave     := x.doc_clave;
+    v_doc_suc       := x.doc_suc;
+    v_neto_exen_mon := nvl(x.doc_neto_exen_mon, 0);
+    v_neto_grav_mon := nvl(x.doc_neto_grav_mon, 0);
+    v_iva_mon       := nvl(x.doc_iva_mon, 0);
+    v_neto_tot_mon  := v_neto_grav_mon + v_iva_mon; --para el subtotal de grav 10 ii
+  
+    v_tot_mon             := v_neto_exen_mon + v_neto_grav_mon + v_iva_mon;
+    v_tot_loc             := nvl(x.doc_neto_exen_loc, 0) +
+                             nvl(x.doc_neto_grav_loc, 0) +
+                             nvl(x.doc_iva_loc, 0);
+    v_mon_desc            := x.mon_desc;
+    v_tipo_fact           := x.tipo_fact;
+    v_doc_nro_doc         := x.doc_nro_doc;
+    v_doc_fec_doc         := x.doc_fec_doc;
+    v_cli_desc            := x.cli_desc;
+    v_cli_ruc             := x.cli_ruc;
+    v_doc_cli             := x.doc_cli;
+    v_cli_tel             := x.cli_tel;
+    v_cli_dir             := x.cli_dir;
+    v_doc_ind_cheque_adel := x.doc_ind_cheque_adel;
+    v_dec_imp             := x.mon_dec_imp;
+    v_doc_legajo          := x.doc_legajo;
+    v_doc_login           := x.oper_nombre; --x.doc_login;
+    v_indi_entr_cabe      := 'S';
+    v_doc_mon             := x.doc_mon;
+    v_doc_form_pago       := x.doc_form_pago;
+    v_forma_entrega       := p_forma_entrega;
+  
+    v_cli_indi_impr_sald_fact := x.cli_indi_impr_sald_fact;
+  
+    if v_forma_entrega is not null then
+      v_forma_entrega := '"' || v_forma_entrega || '"';
+    end if;
+  
+    if x.tipo_fact = 'CREDITO' then
+      v_sald_gs := fl_devu_sald_gs(x.doc_cli);
+      v_sald_us := fl_devu_sald_us(x.doc_cli);
+    end if;
+  
+  end loop;
+
+  if v_doc_suc = 15 then
+    v_men_mensaje_desc := 'La garantía que otorga la empresa se limita a la reparación del producto. Durante el plazo que dure la reparación del producto el comprador no tendrá ' ||
+                          'derecho a formular otros reclamos a la empresa, en ningún concepto. La empresa no asume otra responsabilidad mayor o más amplia que la de reparar ' ||
+                          'el producto, por lo que quedan excluidos los daños emergentes, lucro cesante o daño moral vinculados con la no utilización del producto.';
+  
+  end if;
+
+  if v_doc_suc <> 15 then
+    if v_tipo_fact = 'CONTADO' then
+      v_men_mensaje_desc := rtrim(ltrim(NAME_IN('BDOC_ENCA.MEN_MENSAJE_DESC')));
+    else
+      --if v_doc_cli = 671890 then
+      if v_cli_indi_impr_sald_fact = 'N' then
+        v_men_mensaje_desc := rtrim(ltrim(NAME_IN('BDOC_ENCA.MEN_MENSAJE_DESC')));
+      else
+      
+        v_men_mensaje_desc := ' Para su conciliación: Con esta factura el saldo de su cuenta crédito asciende a                     ' ||
+                              'Gs ' ||
+                              to_char(v_sald_gs,
+                                      '9G999G999G990',
+                                      'NLS_NUMERIC_CHARACTERS = '',.''') || ' ' ||
+                              ' y USD ' ||
+                              to_char(v_sald_us,
+                                      '9G999G990D90',
+                                      'NLS_NUMERIC_CHARACTERS = '',.''') || ' ' ||
+                              'De existir diferencias con su extracto favor comuníquese con el departamento de Créditos y Cobranzas al 021-513920.-';
+      end if;
+    end if;
+  end if;
+  ---Empezar a imprimir solamnente si entro en el loop de la cabecera..
+  if v_indi_entr_cabe = 'S' then
+    --determinar la cantidad de items de la factura.....
+    v_indi_entr_cabe := 'N';
+    v_cant_items     := 0;
+    for y in c_det loop
+      v_cant_items     := v_cant_items + 1;
+      v_indi_entr_cabe := 'S'; --por lo menos se grabó un detalle...
+    end loop;
+  
+    if v_indi_entr_cabe = 'S' then
+      --convertir total factura a letras
+      --v_num_txt := fl_conv_nro_txt(v_tot_mon);
+      if v_mon = 2 then
+        v_tot_mon := round(v_tot_mon, 2);
+      end if;
+    
+      v_num_txt := pack_nume_to_text.fa_conv_nume_text(v_tot_mon);
+      v_num_txt := v_num_txt || ' ' || v_mon_desc || '.-';
+    
+      pl_separar_texto_mon(v_num_txt, 110, 110, v_num_txt_1, v_num_txt_2);
+      pl_separar_texto_mon(v_num_txt_2, 110, 110, v_num_txt_2, v_num_txt_3);
+    
+      tool_env.getvar('imp_factura', v_path_impresora); --obtener direccion de la impresora
+      v_impresora := text_io.fopen(v_path_impresora, 'w'); --abrir puerto de impresora
+    
+      -- Se envia dos veces la misma instruccion, porque si se enciende
+      -- la impresora despues de iniciado windows , entonces la primera
+      -- instruccion no se ejecuta.
+    
+      text_io.put(v_impresora, chr(27) || chr(120) || '0'); --establecer modo DRAFT 
+      text_io.put(v_impresora, chr(27) || chr(64)); -- inicializar impresora
+      text_io.put(v_impresora, chr(27) || chr(120) || '0'); --establecer modo DRAFT
+      text_io.put(v_impresora, chr(27) || chr(77)); --establecer 12 cpi
+      text_io.put(v_impresora, chr(15)); -- compactar
+      --text_io.put(v_impresora, chr(15)); --descompactar
+    
+      text_io.new_line(v_impresora, 5);
+      text_io.put_line(v_impresora, lpad(v_doc_clave, 145, ' '));
+      text_io.new_line(v_impresora, 2);
+    
+      --tipo de factura
+      text_io.put_line(v_impresora, lpad(v_tipo_fact, 145, ' '));
+      text_io.new_line(v_impresora, 5);
+      text_io.put_line(v_impresora, ' '); --dejar en blanco una linea 
+    
+      --fecha y nro.de factura
+      text_io.put_line(v_impresora,
+                       initcap(lpad(rtrim(to_char(v_doc_fec_doc, 'day')),
+                                    37,
+                                    ' ')) ||
+                       lpad(to_char(v_doc_fec_doc, 'DD'), 6, ' ') ||
+                       initcap(lpad(rtrim(to_char(v_doc_fec_doc, 'month')),
+                                    20,
+                                    ' ')) ||
+                       lpad(to_char(v_doc_fec_doc, 'YYYY'), 20, ' ') ||
+                       lpad(' ', 29, ' ') || lpad(v_forma_entrega, 11, ' ') ||
+                       lpad(to_char(sysdate, 'hh24:mi'), 13, ' ') ||
+                       lpad(to_char(v_doc_nro_doc), 10, ' '));
+    
+      --nombre de cliente y ruc
+      text_io.put_line(v_impresora,
+                       lpad(' ', 17, ' ') || rpad(v_cli_desc, 41, ' ') || '(' ||
+                       lpad(NVL(to_char(v_doc_cli), ' '), 8, ' ') || ')' ||
+                       lpad(v_cli_ruc, 60, ' '));
+    
+      --dejar en blanco una linea
+      text_io.put_line(v_impresora, ' ');
+      --direccion y telefono
+    
+      text_io.put_line(v_impresora,
+                       lpad(' ', 21, ' ') || rpad(v_cli_dir, 45, ' ') ||
+                       lpad(v_cli_tel, 70, ' '));
+    
+      --cond.de venta
+      /*if v_doc_ind_cheque_adel = 'S' then
+        v_tipo_pag_cont := 'Cheque Adelantado';
+      else
+        v_tipo_pag_cont := '.';
+      end if;*/
+    
+      if nvl(v_doc_form_pago, 1) = 1 then
+        v_tipo_pag_cont := 'Efectivo';
+      elsif nvl(v_doc_form_pago, 1) = 2 then
+        v_tipo_pag_cont := 'Contra Cheque';
+      elsif nvl(v_doc_form_pago, 1) = 3 then
+        v_tipo_pag_cont := 'Contra Cheque a rendir';
+      end if;
+    
+      text_io.put_line(v_impresora, ' '); --dejar en blanco una linea
+      --text_io.put_line(v_impresora, ' '); --dejar en blanco una linea
+    
+      text_io.put_line(v_impresora,
+                       lpad(v_tipo_fact, 140, ' ') || ' ' ||
+                       substr(v_tipo_pag_cont, 1, 18) --||chr(18)
+                       );
+    
+      --concatenar los diferentes nros.de remision
+      v_remision := ' ';
+      for z in c_deta_rem loop
+        if z.deta_nro_rem is not null then
+          v_remision := v_remision || to_char(z.deta_nro_rem) || ' ';
+        end if;
+      end loop;
+    
+      --nro(s). de remisiones    
+      text_io.put_line(v_impresora, lpad(' ', 5, ' ') || v_remision);
+    
+      V_DEC_IMP := TO_NUMBER(NAME_IN('BDOC_ENCA.W_MON_DEC_IMP')) -
+                   TO_NUMBER(NAME_IN('PARAMETER.P_DEC_IMP_FAC'));
+    
+      if v_mon = 2 THEN
+        V_DEC_IMP := 2;
+      end if;
+    
+      V_FORMATO        := FL_FORMAT_MASK('BDOC_ENCA.DOC_NETO_EXEN_MON',
+                                         V_DEC_IMP);
+      V_FORMATO_LOC    := FL_FORMAT_MASK('BDOC_ENCA.DOC_NETO_EXEN_LOC',
+                                         NAME_IN('PARAMETER.P_CANT_DECIMALES_LOC'));
+      V_FORMATO_PRECIO := FL_FORMAT_MASK('BDOC_ENCA.DOC_NETO_EXEN_MON',
+                                         NAME_IN('BDOC_ENCA.W_MON_DEC_IMP'));
+    
+      v_cont_cuot := 0;
+      for w in c_cuot loop
+        v_cont_cuot := v_cont_cuot + 1;
+        if v_cont_cuot = 1 then
+          v_impo_cuot_01 := w.cuo_imp_mon;
+          v_venc_cuot_01 := w.cuo_fec_vto;
+        elsif v_cont_cuot = 2 then
+          v_impo_cuot_02 := w.cuo_imp_mon;
+          v_venc_cuot_02 := w.cuo_fec_vto;
+        elsif v_cont_cuot = 3 then
+          v_impo_cuot_03 := w.cuo_imp_mon;
+          v_venc_cuot_03 := w.cuo_fec_vto;
+        elsif v_cont_cuot = 4 then
+          v_impo_cuot_04 := w.cuo_imp_mon;
+          v_venc_cuot_04 := w.cuo_fec_vto;
+        elsif v_cont_cuot = 5 then
+          v_impo_cuot_05 := w.cuo_imp_mon;
+          v_venc_cuot_05 := w.cuo_fec_vto;
+        elsif v_cont_cuot = 6 then
+          v_impo_cuot_06 := w.cuo_imp_mon;
+          v_venc_cuot_06 := w.cuo_fec_vto;
+        elsif v_cont_cuot = 7 then
+          v_impo_cuot_07 := w.cuo_imp_mon;
+          v_venc_cuot_07 := w.cuo_fec_vto;
+        elsif v_cont_cuot = 8 then
+          v_impo_cuot_08 := w.cuo_imp_mon;
+          v_venc_cuot_08 := w.cuo_fec_vto;
+        elsif v_cont_cuot = 9 then
+          v_impo_cuot_09 := w.cuo_imp_mon;
+          v_venc_cuot_09 := w.cuo_fec_vto;
+        elsif v_cont_cuot = 10 then
+          v_impo_cuot_10 := w.cuo_imp_mon;
+          v_venc_cuot_10 := w.cuo_fec_vto;
+        elsif v_cont_cuot = 11 then
+          v_impo_cuot_11 := w.cuo_imp_mon;
+          v_venc_cuot_11 := w.cuo_fec_vto;
+        elsif v_cont_cuot = 12 then
+          v_impo_cuot_12 := w.cuo_imp_mon;
+          v_venc_cuot_12 := w.cuo_fec_vto;
+        end if;
+      end loop;
+    
+      --vendedor,operador,items,cuotas 1 a 3
+      v_imp_cuo_1 := v_impo_cuot_01;
+      v_imp_cuo_2 := v_impo_cuot_02;
+      v_imp_cuo_3 := v_impo_cuot_03;
+    
+      text_io.put_line(v_impresora,
+                       lpad(to_char(v_doc_legajo), 20, ' ') || '      ' ||
+                        lpad(v_doc_login, 55, ' ') ||
+                        lpad(to_char(v_cant_items), 23, ' ')
+                       --|| chr(15) --condensado
+                        || lpad(to_char(v_venc_cuot_01, 'dd-mm-yy'), 8, ' ') ||
+                        lpad(to_char(V_IMP_CUO_1,
+                                     V_FORMATO,
+                                     'NLS_NUMERIC_CHARACTERS = '',.'''),
+                             13,
+                             ' ') || ' ' ||
+                        to_char(v_venc_cuot_02, 'dd-mm-yy') ||
+                        lpad(to_char(V_IMP_CUO_2,
+                                     V_FORMATO,
+                                     'NLS_NUMERIC_CHARACTERS = '',.'''),
+                             13,
+                             ' ') || ' ' ||
+                        to_char(v_venc_cuot_03, 'dd-mm-yy') ||
+                        lpad(TO_CHAR(V_IMP_CUO_3,
+                                     V_FORMATO,
+                                     'NLS_NUMERIC_CHARACTERS = '',.'''),
+                             13,
+                             ' '));
+    
+      --cuotas 4 a 6  
+      v_imp_cuo_1 := v_impo_cuot_04;
+      v_imp_cuo_2 := v_impo_cuot_05;
+      v_imp_cuo_3 := v_impo_cuot_06;
+    
+      text_io.put_line(v_impresora,
+                       lpad(' ', 85, ' ') --85 espacios
+                       || to_char(v_venc_cuot_04, 'dd-mm-yy') ||
+                       lpad(to_char(V_IMP_CUO_1,
+                                    V_FORMATO,
+                                    'NLS_NUMERIC_CHARACTERS = '',.'''),
+                            13,
+                            ' ') || ' ' ||
+                       to_char(v_venc_cuot_05, 'dd-mm-yy') ||
+                       lpad(to_char(V_IMP_CUO_2,
+                                    V_FORMATO,
+                                    'NLS_NUMERIC_CHARACTERS = '',.'''),
+                            13,
+                            ' ') || ' ' ||
+                       to_char(v_venc_cuot_06, 'dd-mm-yy') ||
+                       lpad(to_char(V_IMP_CUO_3,
+                                    V_FORMATO,
+                                    'NLS_NUMERIC_CHARACTERS = '',.'''),
+                            13,
+                            ' '));
+    
+      --cuotas 7 a 9
+      v_imp_cuo_1 := v_impo_cuot_07;
+      v_imp_cuo_2 := v_impo_cuot_08;
+      v_imp_cuo_3 := v_impo_cuot_09;
+    
+      text_io.put_line(v_impresora,
+                       lpad(' ', 85, ' ') --85 espacios
+                       || to_char(v_venc_cuot_07, 'dd-mm-yy') ||
+                       lpad(to_char(V_IMP_CUO_1,
+                                    V_FORMATO,
+                                    'NLS_NUMERIC_CHARACTERS = '',.'''),
+                            13,
+                            ' ') || ' ' ||
+                       to_char(v_venc_cuot_08, 'dd-mm-yy') ||
+                       lpad(to_char(V_IMP_CUO_2,
+                                    V_FORMATO,
+                                    'NLS_NUMERIC_CHARACTERS = '',.'''),
+                            13,
+                            ' ') || ' ' ||
+                       to_char(v_venc_cuot_09, 'dd-mm-yy') ||
+                       lpad(to_char(V_IMP_CUO_3,
+                                    V_FORMATO,
+                                    'NLS_NUMERIC_CHARACTERS = '',.'''),
+                            13,
+                            ' '));
+    
+      --cuotas 10 a 12
+      v_imp_cuo_1 := v_impo_cuot_10;
+      v_imp_cuo_2 := v_impo_cuot_11;
+      v_imp_cuo_3 := v_impo_cuot_12;
+    
+      text_io.put_line(v_impresora,
+                       lpad(' ', 85, ' ') --85 espacios
+                       || to_char(v_venc_cuot_10, 'dd-mm-yy') ||
+                       lpad(to_char(V_IMP_CUO_1,
+                                    V_FORMATO,
+                                    'NLS_NUMERIC_CHARACTERS = '',.'''),
+                            13,
+                            ' ') || ' ' ||
+                       to_char(v_venc_cuot_11, 'dd-mm-yy') ||
+                       lpad(to_char(V_IMP_CUO_2,
+                                    V_FORMATO,
+                                    'NLS_NUMERIC_CHARACTERS = '',.'''),
+                            13,
+                            ' ') || ' ' ||
+                       to_char(v_venc_cuot_12, 'dd-mm-yy') ||
+                       lpad(to_char(V_IMP_CUO_3,
+                                    V_FORMATO,
+                                    'NLS_NUMERIC_CHARACTERS = '',.'''),
+                            13,
+                            ' ')
+                       --||chr(18)--descompactar AL FINAL
+                       );
+    
+      --articulos
+      --text_io.put_line(v_impresora, chr(18)); --descompactar
+    
+      V_FORMATO_CANT := FL_FORMAT_MASK('BDOC_DET.DET_CANT', 3);
+    
+      if v_mon = 2 THEN
+        V_DEC_IMP := 2;
+      end if;
+    
+      V_FORMATO := FL_FORMAT_MASK('BDOC_DET.DET_NETO_MON', V_DEC_IMP);
+    
+      for i in c_det loop
+        v_deta_clave_doc    := i.deta_clave_doc;
+        v_deta_nro_item     := i.deta_nro_item;
+        v_deta_imp_neto_mon := i.deta_imp_neto_mon;
+        v_deta_iva_mon      := i.deta_iva_mon;
+        v_deta_cant         := i.deta_cant;
+        v_deta_desc_larg    := i.deta_desc_larg;
+        v_art_codigo        := i.art_codigo;
+        v_art_desc          := i.art_desc;
+        v_art_tipo          := i.art_tipo;
+        v_art_unid_med      := i.art_unid_med;
+        v_art_indi_traza    := i.art_indi_traza;
+      
+        if (v_deta_desc_larg is null) or
+           (v_deta_desc_larg is not null and v_art_tipo = 1) or
+           (NVL(length(v_deta_desc_larg), 0) = 0) then
+          v_desc_larga := v_art_desc;
+        else
+          v_desc_larga := v_deta_desc_larg;
+        end if;
+        if upper(nvl(v_art_indi_traza, 'n')) = upper('s') then
+          v_desc_larga := v_desc_larga || ' Serie Nro. ' ||
+                          rtrim(ltrim(fl_devu_seri_traza(v_art_codigo,
+                                                         v_deta_clave_doc)));
+        end if;
+        pl_separar_texto(v_desc_larga,
+                         v_art_desc_1,
+                         v_lineas,
+                         v_max_renglon,
+                         v_tabulador,
+                         v_max_tope_palabra);
+        if nvl(v_deta_iva_mon, 0) != 0 then
+          v_imp_grav := nvl(v_deta_imp_neto_mon, 0) +
+                        nvl(v_deta_iva_mon, 0);
+          v_imp_exen := null;
+          if i.art_impu = 2 then
+            v_imp_grav_10      := nvl(v_deta_imp_neto_mon, 0) +
+                                  nvl(v_deta_iva_mon, 0);
+            v_tota_imp_grav_10 := nvl(v_tota_imp_grav_10, 0) +
+                                  nvl(v_imp_grav_10, 0);
+            v_tota_iva_10      := nvl(v_tota_iva_10, 0) +
+                                  nvl(v_deta_iva_mon, 0);
+            v_imp_grav_5       := 0;
+          elsif i.art_impu = 3 then
+            v_imp_grav_5      := nvl(v_deta_imp_neto_mon, 0) +
+                                 nvl(v_deta_iva_mon, 0);
+            v_tota_imp_grav_5 := nvl(v_tota_imp_grav_5, 0) +
+                                 nvl(v_imp_grav_5, 0);
+            v_tota_iva_5      := nvl(v_tota_iva_5, 0) +
+                                 nvl(v_deta_iva_mon, 0);
+            v_imp_grav_10     := 0;
+          end if;
+        
+        else
+          v_imp_exen := nvl(v_deta_imp_neto_mon, 0);
+          v_imp_grav := null;
+        end if;
+        v_precio   := ((nvl(v_deta_imp_neto_mon, 0) +
+                      nvl(v_deta_iva_mon, 0)) / nvl(v_deta_cant, 1));
+        v_cantidad := v_deta_cant;
+        text_io.put_line(v_impresora,
+                         lpad(to_char(v_art_codigo), 18, ' ') || '  ' ||
+                         lpad(to_char(v_cantidad, v_formato_cant, 'nls_numeric_characters = '',.'''), 11,' ') --9.999.999
+                         || lpad(nvl(v_art_unid_med, '  '), 2, ' ')
+                         || '   ' || v_art_desc_1 
+                         || lpad(nvl(to_char(v_precio, v_formato_precio, 'nls_numeric_characters = '',.'''), ' '),16, ' ') 
+                         || lpad(nvl(to_char(v_imp_exen, v_formato_precio, 'nls_numeric_characters = '',.'''), ' '), 15, ' ')
+                         || lpad(nvl(to_char(v_imp_grav_5, v_formato_precio, 'nls_numeric_characters = '',.'''), ' '), 16, ' ')
+                         || lpad(nvl(to_char(v_imp_grav_10, v_formato_precio, 'nls_numeric_characters = '',.'''), ' '), 22, ' ')
+                         --|| /*lpad(nvl(to_char(*/v_imp_grav_10/*, v_formato_precio, 'nls_numeric_characters = '',.'''), ' '), 22, ' ')*/
+                         );
+      
+      end loop;
+    
+      --dejar en blanco el resto de las lineas
+      if v_lineas < v_max_lineas then
+        for i in v_lineas + 1 .. v_max_lineas loop
+          text_io.put_line(v_impresora, ' ');
+        end loop;
+      end if;
+    
+      --------------------------------------------------------------------------------------------------------
+      ---total exento y gravado
+      text_io.put_line(v_impresora, ' '); --dejar en blanco una linea
+      text_io.put_line(v_impresora,
+                       lpad(' ', 100, ' ') ||
+                       lpad(nvl(to_char(V_NETO_EXEN_MON,
+                                        V_FORMATO,
+                                        'NLS_NUMERIC_CHARACTERS = '',.'''),
+                                ' '),
+                            20,
+                            ' ') || lpad(nvl(to_char(v_tota_imp_grav_5,
+                                                     V_FORMATO,
+                                                     'NLS_NUMERIC_CHARACTERS = '',.'''),
+                                             ' '),
+                                         15,
+                                         ' ') ||
+                       lpad(nvl(to_char(v_tota_imp_grav_10,
+                                        V_FORMATO,
+                                        'NLS_NUMERIC_CHARACTERS = '',.'''),
+                                ' '),
+                            20,
+                            ' '));
+      ----------------------------------------------------------------------------------------------------------
+    
+      text_io.put_line(v_impresora, ' '); --dejar en blanco una linea
+    
+      --total factura en letras y numero
+      text_io.put_line(v_impresora,
+                       lpad(' ', 25, ' ') ||
+                       rpad(rtrim(V_NUM_TXT_1), 110, ' ') ||
+                       lpad(nvl(to_char(V_TOT_MON,
+                                        V_FORMATO,
+                                        'NLS_NUMERIC_CHARACTERS = '',.'''),
+                                ' '),
+                            20,
+                            ' '));
+    
+      --total factura en letras (2da. linea)
+      text_io.put_line(v_impresora,
+                       lpad(' ', 25, ' ') || rtrim(V_NUM_TXT_2));
+    
+      /*
+         --total factura en letras (3ra. linea)
+         text_io.put_line(v_impresora,
+         lpad(' ', 25, ' ')
+         ||rtrim(V_NUM_TXT_3)
+         );
+      */
+    
+      --total iva
+      text_io.put_line(v_impresora,
+                       lpad(' ', 40, ' ') ||
+                       lpad(nvl(to_char(v_tota_iva_5,
+                                        V_FORMATO,
+                                        'NLS_NUMERIC_CHARACTERS = '',.'''),
+                                ' '),
+                            12,
+                            ' ') || lpad(' ', 10, ' ') ||
+                       lpad(nvl(to_char(v_tota_iva_10,
+                                        V_FORMATO,
+                                        'NLS_NUMERIC_CHARACTERS = '',.'''),
+                                ' '),
+                            25,
+                            ' ') || lpad(nvl(to_char(V_IVA_MON,
+                                                     V_FORMATO,
+                                                     'NLS_NUMERIC_CHARACTERS = '',.'''),
+                                             ' '),
+                                         45,
+                                         ' '));
+    
+      --4 saltos de linea
+      text_io.put_line(v_impresora, chr(10) || chr(10));
+    
+      --el total en moneda local si es factura contado para evitar
+      --el calculo al cajero
+      IF v_tipo_fact = 'CONTADO' and V_DOC_MON <> 1 then
+        text_io.put_line(v_impresora,
+                         lpad(' ', 82, ' ') ||
+                         lpad(to_char((V_TOT_LOC),
+                                      V_FORMATO_LOC,
+                                      'NLS_NUMERIC_CHARACTERS = '',.'''),
+                              11,
+                              ' '));
+      ELSE
+        text_io.put_line(v_impresora, ' ');
+      END IF;
+    
+      text_io.put_line(v_impresora, ' '); --dejar en blanco una linea
+      text_io.put_line(v_impresora, ' ');
+    
+      --mensaje de pie de factura
+      PL_SEPARAR_TEXTO(V_MEN_MENSAJE_DESC,
+                       V_MENSAJE,
+                       V_LINEAS,
+                       151,
+                       1,
+                       V_MAX_TOPE_PALABRA);
+      --break;
+      text_io.put_line(v_impresora, ' ');
+      text_io.put_line(v_impresora, ' '); ---Una linea en blanco... agregado por Heber 
+      text_io.put_line(v_impresora, chr(10) || chr(10) || V_MENSAJE);
+    
+      --salto de pagina, inicializar impresora, cerrar impresora
+      text_io.put(v_impresora, chr(12)); --LF,FF
+      text_io.put(v_impresora, chr(27) || chr(64)); --ESC @ (inicializar impresora)
+      text_io.fclose(v_Impresora); --cerrar impresora
+    end if;
+  end if;
+
+EXCEPTION
+  WHEN ImpresoraNoRegistrada THEN
+    SET_ALERT_PROPERTY('AL_MESSAGE',
+                       ALERT_MESSAGE_TEXT,
+                       'Falta registrar IMP_FACTURA en el Register de Windows!');
+    V_ALERT := SHOW_ALERT('AL_MESSAGE');
+    CLEAR_FORM(NO_VALIDATE, FULL_ROLLBACK);
+    EXIT_FORM;
+END;
+
+
+PROCEDURE PL_IMPRIMIR_FACT_RECORDLUX (p_fin_clave in number, p_forma_entrega in varchar default null) is
+
+--cursor para la cabecera
+cursor c_cab is
+select f.doc_clave, 
+       f.doc_nro_doc, 
+       f.doc_suc,
+       f.doc_fec_doc,
+       decode(f.doc_cli,null, f.doc_cli_nom, cli_nom) cli_desc,
+       decode(f.doc_cli,null, f.doc_cli_tel, cli_tel) cli_tel,
+       decode(f.doc_cli,null, f.doc_cli_dir, cli_dir) cli_dir,
+       decode(f.doc_cli,null, (to_char(f.doc_ruc_nuevo)||'-'||to_char(f.doc_ruc_dv)),
+                              (to_char(nvl(c.cli_ruc_nuevo,44444401))||'-'||to_char(nvl(c.cli_ruc_dv,7)))) cli_ruc,
+       f.doc_cli,
+       --f.doc_login,
+       g.oper_nombre,
+       f.doc_legajo,
+       f.doc_neto_exen_mon,   
+       f.doc_neto_grav_mon, 
+       f.doc_iva_mon,
+       f.doc_neto_exen_loc, 
+       f.doc_neto_grav_loc,
+       f.doc_iva_loc,
+       f.doc_mon,
+       s.docu_obs,
+       m.mon_dec_imp,
+       m.mon_desc,       
+       decode(nvl(f.doc_ind_cuota, 'N'), 'S', 'CREDITO', 'CONTADO') tipo_fact,
+       nvl(f.doc_ind_cheque_adel, 'N') doc_ind_cheque_adel, 
+       s.docu_clave, 
+       nvl(c.cli_indi_impr_sald_fact,'S') cli_indi_impr_sald_fact, 
+       doc_form_pago
+from fin_documento f,
+     stk_documento s,
+     gen_moneda    m,
+     fin_cliente   c,
+     gen_operador	 g
+where s.docu_clave 		= f.doc_clave_stk
+and f.doc_mon      		= m.mon_codigo
+and g.oper_login  		= f.doc_login
+and f.doc_cli      		= c.cli_codigo(+) --necesario para clientes esporadicos.....
+and f.doc_clave 			= p_fin_clave;
+
+
+ 
+--cursor para el detalle
+cursor c_det is
+select d.deta_clave_doc,
+       d.deta_nro_item, 
+       d.deta_imp_neto_mon, 
+       d.deta_iva_mon,
+       d.deta_cant,
+       d.deta_desc_larg,    
+       a.art_codigo, 
+       
+			replace(a.art_desc , chr(9), ' ')  art_desc ,
+     
+       a.art_tipo,
+       a.art_unid_med, 
+       nvl(a.art_indi_traza , 'N') art_indi_traza, 
+       a.art_impu
+          
+from fin_documento f,
+     stk_documento s, 
+     stk_documento_det d,
+     stk_articulo a
+where s.docu_clave = f.doc_clave_stk
+and s.docu_clave   = d.deta_clave_doc
+and d.deta_art     = a.art_codigo
+and f.doc_clave    = p_fin_clave
+order by d.deta_nro_item;
+
+
+--cursor para el detalle de remisiones
+cursor c_deta_rem is
+select  deta_nro_rem
+from fin_documento f,
+     stk_documento s, 
+     stk_documento_det d
+where s.docu_clave = f.doc_clave_stk
+and s.docu_clave = d.deta_clave_doc
+and f.doc_clave = p_fin_clave
+group by deta_nro_rem
+order by deta_nro_rem;
+
+
+--cursor para cuotas....
+cursor c_cuot is
+select cuo_fec_vto, cuo_imp_mon
+from fin_cuota
+where cuo_clave_doc = p_fin_clave
+order by cuo_fec_vto;
+
+
+--variables para la cabecera
+v_doc_clave   number;
+v_doc_suc			number(2);
+v_mon_desc    VARCHAR2(20);
+v_tipo_fact   VARCHAR2(10);
+v_doc_nro_doc number;
+v_doc_fec_doc date;
+v_cli_desc    VARCHAR2(40);
+v_cli_ruc     VARCHAR2(20);
+v_cli_tel     VARCHAR2(15);
+v_cli_dir     VARCHAR2(40);
+v_doc_cli     number;
+v_doc_ind_cheque_adel VARCHAR2(1);
+
+v_doc_login VARCHAR2(40);
+v_doc_legajo number;
+v_doc_mon    number;
+v_indi_entr_cabe VARCHAR2(1) := 'N'; --Indicador q determina si entro o no en el loop de la cabecara
+
+V_MEN_MENSAJE_DESC varchar2(451);
+
+v_cant_items number := 0;
+
+v_art_indi_traza varchar2(1);
+v_forma_entrega  varchar2(15);
+
+---------------------------------------------------------
+--variables para las cuotas
+v_cont_cuot   number := 0;
+
+v_impo_cuot_01 number;
+v_impo_cuot_02 number;
+v_impo_cuot_03 number;
+v_impo_cuot_04 number;
+v_impo_cuot_05 number;
+v_impo_cuot_06 number;
+v_impo_cuot_07 number;
+v_impo_cuot_08 number;
+v_impo_cuot_09 number;
+v_impo_cuot_10 number;
+v_impo_cuot_11 number;
+v_impo_cuot_12 number;
+
+v_venc_cuot_01 date;
+v_venc_cuot_02 date;
+v_venc_cuot_03 date;
+v_venc_cuot_04 date;
+v_venc_cuot_05 date;
+v_venc_cuot_06 date;
+v_venc_cuot_07 date;
+v_venc_cuot_08 date;
+v_venc_cuot_09 date;
+v_venc_cuot_10 date;
+v_venc_cuot_11 date;
+v_venc_cuot_12 date;
+--------------------------------------------------------
+
+v_imp_cuo_1 number;
+v_imp_cuo_2 number;
+v_imp_cuo_3 number;
+
+--variables para el detalle
+v_deta_clave_doc     number;    
+v_deta_nro_item      number; 
+v_deta_imp_neto_mon  number; 
+v_deta_iva_mon       number;
+v_deta_cant          number;
+v_deta_desc_larg     varchar2(500);    
+v_art_codigo         number; 
+v_art_desc           varchar2(80);
+v_art_tipo           number; --tipo de articulo 1 = adquirido 2 = producido
+v_art_unid_med      VARCHAR2(2);
+-----------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------
+-- constantes
+-- estas constantes son para controlar la impresion de la factura
+-- difieren por empresa, ya que cada una tiene formato diferente
+-- de factura. luis fedriani 19/11/1999
+  v_max_renglon number      := 50; --cantidad máxima de letras que entran por linea 30
+  v_tabulador   number      := 36; --tabulador para las siguientes lineas de la descripcion 27
+  v_max_lineas  number      := 22; --cantidad máxima de líneas que entran en una factura.
+  v_max_tope_palabra number := 9; -- cantidad maxima de letras en una palabra para que no se corte y se envie a la siguiente linea la palabra completa
+
+-- variables
+  v_cantidad         number;
+  v_formato          varchar2(20);
+  v_formato_precio   varchar2(20);
+  v_formato_loc      varchar2(20);
+  v_formato_cant     varchar2(20);
+  v_remision         varchar2(200) := null;
+  v_num_txt          VARCHAR2(200) := ' ';
+  v_num_txt_1        VARCHAR2(120) := ' ';
+  v_num_txt_2        VARCHAR2(150) := ' ';
+  v_num_txt_3        VARCHAR2(70) := ' ';
+  v_impresora        text_io.file_type;
+  v_path_impresora   varchar2(50) := null;
+  v_art_desc_1       VARCHAR2(1100);
+  v_desc_larga       VARCHAR2(1100);
+  v_mensaje          varchar2(1100);
+  v_imp_exen         number;
+  v_imp_grav         number;
+  
+  v_neto_exen_mon    number := 0;
+  v_neto_grav_mon    number := 0;
+  v_neto_tot_mon     number := 0;
+  
+  v_iva_mon          number := 0;
+  v_tot_mon          number := 0;                                                   
+  v_tot_loc          number := 0;
+  v_subtotal_grav    number;
+  v_subtotal_exen    number;
+  v_precio           number;
+  v_items            integer := 0;
+  v_lineas           integer := 0;
+  v_dec_imp          number;
+  v_tipo_iva         varchar2(5);
+
+  impresoranoregistrada exception;
+  pragma                exception_init(impresoranoregistrada,-302000);
+  v_alert               number; 
+  v_tipo_pag_cont       varchar2(30) := '.'; 
+  
+  
+  v_sald_gs number := 0;
+  v_sald_us number := 0;
+  
+  v_cli_indi_impr_sald_fact varchar2(1) := 'S';
+
+  v_doc_form_pago number;
+  
+  
+  v_imp_grav_5 number := 0;
+  v_imp_grav_10 number:= 0;
+  
+  v_tota_imp_grav_5 number := 0;
+  v_tota_imp_grav_10 number := 0;
+  
+  
+  v_tota_iva_5 number;
+  v_tota_iva_10 number;
+  v_mon number;
+  
+Begin
+  	
+  select doc_mon
+   into v_mon
+  from fin_documento
+  where doc_clave = p_fin_clave;
+  	
+
+  --asignar variables para la cabecera
+  for x in c_cab loop
+  	
+  	--Debe imprimir con 2 decimales en el caso de facturas en dólares.
+  	if x.doc_mon = 2 then
+  	   x.mon_dec_imp := 2;
+  	end if;
+  	  	
+    v_doc_clave           := x.doc_clave;
+    v_doc_suc						  := x.doc_suc;
+    v_neto_exen_mon       := nvl(x.doc_neto_exen_mon,0);
+    v_neto_grav_mon       := nvl(x.doc_neto_grav_mon,0);
+    v_iva_mon             := nvl(x.doc_iva_mon,0);
+    v_neto_tot_mon        := v_neto_grav_mon +v_iva_mon; --para el subtotal de grav 10 ii
+
+    v_tot_mon             := v_neto_exen_mon + v_neto_grav_mon+ v_iva_mon;
+    v_tot_loc             := nvl(x.doc_neto_exen_loc,0) + nvl(x.doc_neto_grav_loc,0) + nvl(x.doc_iva_loc,0);
+    v_mon_desc            := x.mon_desc;
+    v_tipo_fact           := x.tipo_fact;
+    v_doc_nro_doc         := x.doc_nro_doc;
+    v_doc_fec_doc         := x.doc_fec_doc;
+    v_cli_desc            := x.cli_desc;
+    v_cli_ruc             := x.cli_ruc;
+    v_doc_cli             := x.doc_cli;
+    v_cli_tel             := x.cli_tel; 
+    v_cli_dir             := x.cli_dir;
+    v_doc_ind_cheque_adel := x.doc_ind_cheque_adel ;
+    v_dec_imp             := x.mon_dec_imp; 
+    v_doc_legajo          := x.doc_legajo;
+    v_doc_login           := x.oper_nombre;--x.doc_login;
+    v_indi_entr_cabe      := 'S'; 
+    v_doc_mon             := x.doc_mon;  
+    v_doc_form_pago       := x.doc_form_pago;
+    v_forma_entrega				:= p_forma_entrega;
+    
+    v_cli_indi_impr_sald_fact := x.cli_indi_impr_sald_fact;
+    
+    if v_forma_entrega is not null then
+       v_forma_entrega := '"'||v_forma_entrega||'"';    
+    end if;
+    
+    
+     
+     if x.tipo_fact = 'CREDITO' then     	
+        v_sald_gs := fl_devu_sald_gs(x.doc_cli);
+        v_sald_us := fl_devu_sald_us(x.doc_cli);     
+     end if;   
+    
+  end loop;    
+
+
+if v_doc_suc = 15 then
+		  v_men_mensaje_desc    := 'La garantía que otorga la empresa se limita a la reparación del producto. Durante el plazo que dure la reparación del producto el comprador no tendrá '
+		  												 ||'derecho a formular otros reclamos a la empresa, en ningún concepto. La empresa no asume otra responsabilidad mayor o más amplia que la de reparar '
+		  												 ||'el producto, por lo que quedan excluidos los daños emergentes, lucro cesante o daño moral vinculados con la no utilización del producto.';
+
+end if;
+
+
+if v_doc_suc <> 15 then
+  if v_tipo_fact = 'CONTADO' then
+  	  v_men_mensaje_desc    := rtrim(ltrim(NAME_IN('BDOC_ENCA.MEN_MENSAJE_DESC'))); 
+  else
+  	--if v_doc_cli = 671890 then
+   if v_cli_indi_impr_sald_fact = 'N' then
+  		v_men_mensaje_desc    := rtrim(ltrim(NAME_IN('BDOC_ENCA.MEN_MENSAJE_DESC'))); 
+   else
+   	
+   	
+  	  v_men_mensaje_desc    := ' Para su conciliación: Con esta factura el saldo de su cuenta crédito asciende a                     '
+  	                         ||'Gs '    ||to_char(v_sald_gs, '9G999G999G990' , 'NLS_NUMERIC_CHARACTERS = '',.''')||' '
+  	                         ||' y USD '||to_char(v_sald_us, '9G999G990D90'  , 'NLS_NUMERIC_CHARACTERS = '',.''')||' '
+                             ||'De existir diferencias con su extracto favor comuníquese con el departamento de Créditos y Cobranzas al 021-513920.-';
+    end if;
+  end if;	
+end if;
+  ---Empezar a imprimir solamnente si entro en el loop de la cabecera..
+  if v_indi_entr_cabe = 'S' then
+    --determinar la cantidad de items de la factura.....
+    v_indi_entr_cabe      := 'N';
+    v_cant_items := 0; 
+    for y in c_det loop
+      v_cant_items        := v_cant_items + 1;
+      v_indi_entr_cabe    := 'S'; --por lo menos se grabó un detalle...
+    end loop;
+   
+    if v_indi_entr_cabe = 'S' then
+    --convertir total factura a letras
+    --v_num_txt := fl_conv_nro_txt(v_tot_mon);
+    if v_mon = 2 then
+    	 v_tot_mon := round(v_tot_mon,2);
+    end if;
+    
+    v_num_txt := pack_nume_to_text.fa_conv_nume_text(v_tot_mon);
+    v_num_txt := v_num_txt||' '||v_mon_desc||'.-';
+
+    pl_separar_texto_mon(v_num_txt, 110, 110, v_num_txt_1, v_num_txt_2);
+    pl_separar_texto_mon(v_num_txt_2, 110, 110, v_num_txt_2, v_num_txt_3);
+
+    tool_env.getvar('imp_factura', v_path_impresora); --obtener direccion de la impresora
+    v_impresora := text_io.fopen(v_path_impresora, 'w'); --abrir puerto de impresora
+
+    -- Se envia dos veces la misma instruccion, porque si se enciende
+    -- la impresora despues de iniciado windows , entonces la primera
+    -- instruccion no se ejecuta.
+
+    text_io.put(v_impresora, chr(27)||chr(120)||'0'); --establecer modo DRAFT 
+    text_io.put(v_impresora, chr(27)||chr(64)); -- inicializar impresora
+    text_io.put(v_impresora, chr(27)||chr(120)||'0'); --establecer modo DRAFT
+    text_io.put(v_impresora, chr(27)||chr(77)); --establecer 12 cpi
+    text_io.put(v_impresora, chr(15)); -- compactar
+    --text_io.put(v_impresora, chr(15)); --descompactar
+    
+    text_io.new_line(v_impresora,5);
+    text_io.put_line(v_impresora,lpad(v_doc_clave,145,' '));    
+    text_io.new_line(v_impresora,2);
+    
+    
+    --tipo de factura
+    text_io.put_line(v_impresora,lpad(v_tipo_fact,145,' '));
+    text_io.new_line(v_impresora,2);
+    
+
+    --fecha y nro.de factura
+    text_io.put_line(v_impresora,
+    initcap(lpad(rtrim(to_char(v_doc_fec_doc,'day')), 37, ' '))
+    ||lpad(to_char(v_doc_fec_doc,'DD'), 6, ' ')
+    ||initcap(lpad(rtrim(to_char(v_doc_fec_doc,'month')), 20, ' '))
+    ||lpad(to_char(v_doc_fec_doc,'YYYY'), 20, ' ')
+    ||lpad(' ', 29, ' ')
+    ||lpad(v_forma_entrega, 11, ' ')
+    ||lpad(to_char(sysdate, 'hh24:mi'), 13, ' ')
+    ||lpad(to_char(v_doc_nro_doc), 10, ' ')
+    );
+
+
+   --dejar en blanco una linea
+    text_io.put_line(v_impresora, ' '); 
+    --nombre de cliente y ruc
+    text_io.put_line(v_impresora,
+    lpad(' ', 17, ' ')
+    ||rpad(v_cli_desc, 41, ' ')
+    ||'('||lpad(NVL(to_char(v_doc_cli),' '), 8, ' ')||')'
+    ||lpad(v_cli_ruc, 60, ' ')    
+    );
+ 
+    ----aqui
+
+    text_io.put_line(v_impresora,
+    lpad(' ', 21, ' ')
+    ||rpad(v_cli_dir, 45, ' ')
+    ||lpad(v_cli_tel, 70, ' ')
+    );
+
+    --cond.de venta
+    /*if v_doc_ind_cheque_adel = 'S' then
+      v_tipo_pag_cont := 'Cheque Adelantado';
+    else
+      v_tipo_pag_cont := '.';
+    end if;*/
+    
+    if nvl(v_doc_form_pago,1) = 1 then 
+    	  v_tipo_pag_cont := 'Efectivo';
+    elsif nvl(v_doc_form_pago,1) = 2 then 
+    	  v_tipo_pag_cont := 'Contra Cheque';
+    elsif nvl(v_doc_form_pago,1) = 3 then 
+    	  v_tipo_pag_cont := 'Contra Cheque a rendir';
+    end if;	  
+    	
+    
+    
+  
+    text_io.put_line(v_impresora, ' '); --dejar en blanco una linea
+    --text_io.put_line(v_impresora, ' '); --dejar en blanco una linea
+    
+    text_io.put_line(v_impresora,lpad(v_tipo_fact,140,' ')||' '||
+    substr(v_tipo_pag_cont,1,18)--||chr(18)
+    );
+
+    --concatenar los diferentes nros.de remision
+    v_remision := ' ';
+    for z in c_deta_rem loop
+      if z.deta_nro_rem is not null then
+        v_remision := v_remision||to_char(z.deta_nro_rem)||' ';
+      end if;
+    end loop;
+
+    --nro(s). de remisiones    
+    text_io.put_line(v_impresora, lpad(' ', 25, ' ')||v_remision);
+
+    V_DEC_IMP        := TO_NUMBER(NAME_IN('BDOC_ENCA.W_MON_DEC_IMP')) - TO_NUMBER(NAME_IN('PARAMETER.P_DEC_IMP_FAC'));
+    
+    if v_mon = 2 THEN
+       V_DEC_IMP := 2;
+    end if;
+    
+    V_FORMATO        := FL_FORMAT_MASK('BDOC_ENCA.DOC_NETO_EXEN_MON', V_DEC_IMP);
+    V_FORMATO_LOC    := FL_FORMAT_MASK('BDOC_ENCA.DOC_NETO_EXEN_LOC', NAME_IN('PARAMETER.P_CANT_DECIMALES_LOC'));
+    V_FORMATO_PRECIO := FL_FORMAT_MASK('BDOC_ENCA.DOC_NETO_EXEN_MON', NAME_IN('BDOC_ENCA.W_MON_DEC_IMP'));
+
+
+
+
+    v_cont_cuot := 0;
+    for w in c_cuot loop
+      v_cont_cuot := v_cont_cuot + 1;
+      if v_cont_cuot = 1 then
+        v_impo_cuot_01  := w.cuo_imp_mon;
+        v_venc_cuot_01  := w.cuo_fec_vto;
+      elsif v_cont_cuot = 2 then
+        v_impo_cuot_02  := w.cuo_imp_mon;
+        v_venc_cuot_02  := w.cuo_fec_vto;
+      elsif v_cont_cuot = 3 then
+        v_impo_cuot_03  := w.cuo_imp_mon;
+        v_venc_cuot_03  := w.cuo_fec_vto;
+      elsif v_cont_cuot = 4 then
+        v_impo_cuot_04  := w.cuo_imp_mon;
+        v_venc_cuot_04  := w.cuo_fec_vto;
+      elsif v_cont_cuot = 5 then
+        v_impo_cuot_05  := w.cuo_imp_mon;
+        v_venc_cuot_05  := w.cuo_fec_vto;
+      elsif v_cont_cuot = 6 then
+        v_impo_cuot_06  := w.cuo_imp_mon;
+        v_venc_cuot_06  := w.cuo_fec_vto;
+      elsif v_cont_cuot = 7 then
+        v_impo_cuot_07  := w.cuo_imp_mon;
+        v_venc_cuot_07  := w.cuo_fec_vto;
+      elsif v_cont_cuot = 8 then
+        v_impo_cuot_08  := w.cuo_imp_mon;
+        v_venc_cuot_08  := w.cuo_fec_vto;
+      elsif v_cont_cuot = 9 then
+        v_impo_cuot_09  := w.cuo_imp_mon;
+        v_venc_cuot_09  := w.cuo_fec_vto;
+      elsif v_cont_cuot = 10 then
+        v_impo_cuot_10  := w.cuo_imp_mon;
+        v_venc_cuot_10  := w.cuo_fec_vto;
+      elsif v_cont_cuot = 11 then
+        v_impo_cuot_11  := w.cuo_imp_mon;
+        v_venc_cuot_11  := w.cuo_fec_vto;
+      elsif v_cont_cuot = 12 then
+        v_impo_cuot_12  := w.cuo_imp_mon;
+        v_venc_cuot_12  := w.cuo_fec_vto;
+      end if;  
+    end loop;
+
+
+    --vendedor,operador,items,cuotas 1 a 3
+    v_imp_cuo_1 := v_impo_cuot_01;
+    v_imp_cuo_2 := v_impo_cuot_02;
+    v_imp_cuo_3 := v_impo_cuot_03;
+
+
+
+    text_io.put_line(v_impresora,
+    lpad(to_char(v_doc_legajo), 20, ' ')||'      '
+    ||lpad(v_doc_login, 55, ' ')
+    ||lpad(to_char(v_cant_items), 23, ' ')
+    ||lpad(to_char(v_venc_cuot_01,'dd-mm-yy'), 8, ' ')
+    ||lpad(to_char(V_IMP_CUO_1, V_FORMATO , 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(v_venc_cuot_02,'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_2, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(v_venc_cuot_03,'dd-mm-yy')
+    ||lpad(TO_CHAR(V_IMP_CUO_3, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')
+    );
+
+    --cuotas 4 a 6  
+    v_imp_cuo_1 := v_impo_cuot_04;
+    v_imp_cuo_2 := v_impo_cuot_05;
+    v_imp_cuo_3 := v_impo_cuot_06;
+  
+    text_io.put_line(v_impresora,
+     lpad(' ', 85, ' ') --85 espacios
+    ||to_char(v_venc_cuot_04,'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_1, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(v_venc_cuot_05,'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_2, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(v_venc_cuot_06,'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_3, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')
+    );
+
+    --cuotas 7 a 9
+    v_imp_cuo_1 := v_impo_cuot_07;
+    v_imp_cuo_2 := v_impo_cuot_08;
+    v_imp_cuo_3 := v_impo_cuot_09;
+
+    text_io.put_line(v_impresora,
+    lpad(' ', 85, ' ') --85 espacios
+    ||to_char(v_venc_cuot_07,'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_1, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(v_venc_cuot_08,'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_2, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(v_venc_cuot_09,'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_3, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')
+    );
+
+    --cuotas 10 a 12
+    v_imp_cuo_1 := v_impo_cuot_10;
+    v_imp_cuo_2 := v_impo_cuot_11;
+    v_imp_cuo_3 := v_impo_cuot_12;
+
+    text_io.put_line(v_impresora,
+     lpad(' ', 85, ' ') --85 espacios
+    ||to_char(v_venc_cuot_10,'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_1, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(v_venc_cuot_11,'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_2, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(v_venc_cuot_12,'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_3, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')
+    --||chr(18)--descompactar AL FINAL
+    );
+
+
+    --articulos
+    --text_io.put_line(v_impresora, chr(18)); --descompactar
+
+    V_FORMATO_CANT := FL_FORMAT_MASK('BDOC_DET.DET_CANT', 3);
+    
+    if v_mon = 2 THEN
+       V_DEC_IMP := 2;
+    end if;
+    
+    V_FORMATO      := FL_FORMAT_MASK('BDOC_DET.DET_NETO_MON', V_DEC_IMP);
+
+   text_io.new_line(v_impresora,1);
+   
+   
+    for i in c_det loop
+      v_deta_clave_doc     := i.deta_clave_doc; 
+      v_deta_nro_item      := i.deta_nro_item;
+      v_deta_imp_neto_mon  := i.deta_imp_neto_mon;
+      v_deta_iva_mon       := i.deta_iva_mon; 
+      v_deta_cant          := i.deta_cant;
+      v_deta_desc_larg     := i.deta_desc_larg;
+      v_art_codigo         := i.art_codigo;
+      v_art_desc           := i.art_desc;
+      v_art_tipo           := i.art_tipo;
+      v_art_unid_med       := i.art_unid_med;
+      v_art_indi_traza     := i.art_indi_traza;
+
+      if (v_deta_desc_larg is null) or (v_deta_desc_larg is not null and v_art_tipo = 1) or (NVL(length(v_deta_desc_larg), 0) = 0) then
+        v_desc_larga := v_art_desc;
+      else
+        v_desc_larga := v_deta_desc_larg; 
+      end if; 
+      if upper(nvl(v_art_indi_traza, 'n')) = upper('s') then
+      	v_desc_larga := v_desc_larga||' Serie Nro. '||rtrim(ltrim(fl_devu_seri_traza(v_art_codigo, v_deta_clave_doc)));
+      end if;	
+      pl_separar_texto(v_desc_larga,v_art_desc_1,v_lineas,v_max_renglon,v_tabulador,v_max_tope_palabra);
+      
+      if  nvl(v_deta_iva_mon,0) > 0 then
+        v_imp_grav := nvl(v_deta_imp_neto_mon,0) + nvl(v_deta_iva_mon,0);
+        v_imp_exen := null;
+        if i.art_impu = 2 then
+          v_imp_grav_10 := nvl(v_deta_imp_neto_mon,0) + nvl(v_deta_iva_mon,0);
+          v_tota_imp_grav_10 := nvl(v_tota_imp_grav_10,0) + nvl(v_imp_grav_10,0);
+          v_tota_iva_10 := nvl(v_tota_iva_10,0) + nvl(v_deta_iva_mon,0);
+          v_imp_grav_5 := 0;
+        elsif i.art_impu = 3 then
+        	v_imp_grav_5      := nvl(v_deta_imp_neto_mon,0) + nvl(v_deta_iva_mon,0);
+        	v_tota_imp_grav_5 := nvl(v_tota_imp_grav_5,0) + nvl(v_imp_grav_5,0);
+        	v_tota_iva_5      := nvl(v_tota_iva_5,0) + nvl(v_deta_iva_mon,0);
+        	v_imp_grav_10     := 0;
+        end if;
+        	
+      else
+        v_imp_exen := nvl(v_deta_imp_neto_mon,0) ;
+        v_imp_grav := null;
+      end if;
+      
+      
+      
+      
+      
+      v_precio   := ((nvl(v_deta_imp_neto_mon,0) + nvl(v_deta_iva_mon,0)) / nvl(v_deta_cant,1));       
+      v_cantidad := v_deta_cant;
+		
+      text_io.put_line(v_impresora,
+      lpad(to_char(v_art_codigo),18,' ')||'  '
+      ||lpad(to_char(v_cantidad, v_formato_cant, 'nls_numeric_characters = '',.'''), 11, ' ')--9.999.999
+      ||lpad(nvl(v_art_unid_med,'  '), 2, ' ')||'   '
+      ||v_art_desc_1 
+      ||lpad(nvl(to_char(v_precio, v_formato_precio, 'nls_numeric_characters = '',.'''), ' '), 16, ' ')
+      ||lpad(nvl(to_char(v_imp_exen  ,  v_formato_precio, 'nls_numeric_characters = '',.'''), ' '), 15, ' ')
+      ||lpad(nvl(to_char(v_imp_grav_5,  v_formato_precio, 'nls_numeric_characters = '',.'''), ' '), 16, ' ')
+      ||lpad(nvl(to_char(v_imp_grav_10, v_formato_precio, 'nls_numeric_characters = '',.'''), ' '), 22, ' ')
+      
+      );
+      
+    end loop;
+
+    --dejar en blanco el resto de las lineas
+    if v_lineas < v_max_lineas then
+      for i in v_lineas+1..v_max_lineas loop
+        text_io.put_line(v_impresora, ' ');
+      end loop;
+    end if; 
+
+
+--------------------------------------------------------------------------------------------------------
+    ---total exento y gravado
+    text_io.put_line(v_impresora, ' '); --dejar en blanco una linea
+    text_io.put_line(v_impresora,
+    lpad(' ', 100, ' ')  
+    ||lpad(nvl(to_char(V_NETO_EXEN_MON, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 20, ' ')
+    ||lpad(nvl(to_char(v_tota_imp_grav_5, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 15, ' ')
+    ||lpad(nvl(to_char(v_tota_imp_grav_10, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 20, ' ')
+    );
+----------------------------------------------------------------------------------------------------------
+
+   text_io.put_line(v_impresora, ' '); --dejar en blanco una linea
+
+   --total factura en letras y numero
+   text_io.put_line(v_impresora,
+   lpad(' ', 25, ' ')
+   ||rpad(rtrim(V_NUM_TXT_1), 110, ' ')
+   ||lpad(nvl(to_char(V_TOT_MON, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 20, ' ')
+    );
+  
+   --total factura en letras (2da. linea)
+   text_io.put_line(v_impresora,
+   lpad(' ', 25, ' ')
+   ||rtrim(V_NUM_TXT_2)
+   );
+   
+   
+/*
+   --total factura en letras (3ra. linea)
+   text_io.put_line(v_impresora,
+   lpad(' ', 25, ' ')
+   ||rtrim(V_NUM_TXT_3)
+   );
+*/
+
+
+     --total iva
+     text_io.put_line(v_impresora,
+     lpad(' ', 40, ' ')
+     ||lpad(nvl(to_char(v_tota_iva_5, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 12, ' ')
+     ||lpad(' ', 10, ' ')     
+     ||lpad(nvl(to_char(v_tota_iva_10, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 25, ' ')
+     ||lpad(nvl(to_char(V_IVA_MON, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 45, ' ')
+     );
+     
+     
+     
+     
+   
+     --4 saltos de linea
+     text_io.put_line(v_impresora, chr(10)||chr(10));
+
+    --el total en moneda local si es factura contado para evitar
+    --el calculo al cajero
+    IF   v_tipo_fact = 'CONTADO' and V_DOC_MON <> 1 then
+        text_io.put_line(v_impresora, 
+         lpad(' ', 82, ' ')
+       ||lpad(to_char((V_TOT_LOC), V_FORMATO_LOC, 'NLS_NUMERIC_CHARACTERS = '',.'''), 11, ' ')
+     );
+    ELSE
+      text_io.put_line(v_impresora, ' ');
+    END IF;
+ 
+ 
+ 
+    
+			    text_io.put_line(v_impresora, ' '); --dejar en blanco una linea
+			    --text_io.put_line(v_impresora, ' ');
+
+    --mensaje de pie de factura
+  		    PL_SEPARAR_TEXTO(V_MEN_MENSAJE_DESC , V_MENSAJE,V_LINEAS,151,1,V_MAX_TOPE_PALABRA);
+			  --break;
+			  text_io.put_line(v_impresora, ' ');
+			  text_io.put_line(v_impresora, ' ');  ---Una linea en blanco... agregado por Heber 
+			  text_io.put_line(v_impresora,
+			                   chr(10)||chr(10)||V_MENSAJE);
+  
+  --salto de pagina, inicializar impresora, cerrar impresora
+  text_io.put(v_impresora, chr(12)); --LF,FF
+  text_io.put(v_impresora, chr(27)||chr(64)); --ESC @ (inicializar impresora)
+  text_io.fclose(v_Impresora); --cerrar impresora
+ end if;
+end if;
+
+
+EXCEPTION
+  WHEN ImpresoraNoRegistrada THEN
+    SET_ALERT_PROPERTY('AL_MESSAGE',ALERT_MESSAGE_TEXT,'Falta registrar IMP_FACTURA en el Register de Windows!');
+    V_ALERT := SHOW_ALERT('AL_MESSAGE');
+    CLEAR_FORM(NO_VALIDATE, FULL_ROLLBACK);
+    EXIT_FORM;
+END;
+
+
+PROCEDURE PL_IMPR_FAC_SERVICIO IS
+-- CONSTANTES
+-- Estas constantes son para controlar la impresion de la factura
+-- difieren por empresa, ya que cada una tiene formato diferente
+-- de factura. Luis Fedriani 19/11/1999
+  V_MAX_RENGLON NUMBER := 30; --Cantidad máxima de letras que entran por linea
+  V_TABULADOR   NUMBER := 27; --Tabulador para las siguientes lineas de la descripcion
+  V_MAX_LINEAS  NUMBER := 18; --Cantidad máxima de líneas que entran en una factura.
+  V_MAX_TOPE_PALABRA NUMBER := 5; -- Cantidad maxima de letras en una palabra para que no se corte y se envie a la siguiente linea la palabra completa
+
+-- VARIABLES
+  V_CANTIDAD NUMBER;
+  V_IMP_CUO_1 NUMBER;
+  V_IMP_CUO_2 NUMBER;
+  V_IMP_CUO_3 NUMBER;
+  V_FORMATO   VARCHAR2(20);
+  V_FORMATO_LOC VARCHAR2(20);
+  V_FORMATO_CANT VARCHAR2(20);
+  V_NUM_TXT   VARCHAR2(200) := ' ';
+  V_NUM_TXT_1 VARCHAR2(70) := ' ';
+  V_NUM_TXT_2 VARCHAR2(150) := ' ';
+  V_NUM_TXT_3 VARCHAR2(70) := ' ';
+  V_IMPRESORA text_io.file_type;
+  V_Path_Impresora VARCHAR2(50) := NULL;
+  V_ART_DESC_1 VARCHAR2(540);
+  V_DESC_LARGA VARCHAR2(540);
+  V_MENSAJE   VARCHAR2(540);
+  V_IMP_EXEN  NUMBER;
+  V_IMP_GRAV  NUMBER;
+  V_NETO_EXEN_MON NUMBER := REPLACE(NAME_IN('BDOC_ENCA.DOC_NETO_EXEN_MON'), ',' , '.');
+  V_NETO_GRAV_MON NUMBER := REPLACE(NAME_IN('BDOC_ENCA.DOC_NETO_GRAV_MON'), ',' , '.');
+  V_IVA_MON       NUMBER := REPLACE(NAME_IN('BDOC_ENCA.DOC_IVA_MON'), ',' , '.');
+  V_TOT_MON       NUMBER := TO_NUMBER(REPLACE(NAME_IN('BDOC_ENCA.DOC_NETO_EXEN_MON'), ',' , '.'))
+                          + TO_NUMBER(REPLACE(NAME_IN('BDOC_ENCA.DOC_NETO_GRAV_MON'), ',' , '.'))
+                          + TO_NUMBER(REPLACE(NAME_IN('BDOC_ENCA.DOC_IVA_MON'), ',' , '.'));
+  V_TOT_LOC       NUMBER := TO_NUMBER(REPLACE(NAME_IN('BDOC_ENCA.DOC_NETO_EXEN_LOC'), ',' , '.'))
+                          + TO_NUMBER(REPLACE(NAME_IN('BDOC_ENCA.DOC_NETO_GRAV_LOC'), ',' , '.'))
+                          + TO_NUMBER(REPLACE(NAME_IN('BDOC_ENCA.DOC_IVA_LOC'), ',' , '.'));
+
+  V_PRECIO NUMBER;
+  V_ITEMS INTEGER := 0;
+  V_LINEAS INTEGER := 0;
+  ImpresoraNoRegistrada EXCEPTION;
+  PRAGMA EXCEPTION_INIT(ImpresoraNoRegistrada,-302000);
+  V_ALERT NUMBER; 
+
+BEGIN
+  --convertir total factura a letras
+  V_NUM_TXT := FL_CONV_NRO_TXT(V_TOT_MON);
+  V_NUM_TXT := V_NUM_TXT||' '||NAME_IN('BDOC_ENCA.MON_DESC')||'.-';
+  PL_SEPARAR_TEXTO_MON(V_NUM_TXT, 70, 40, V_NUM_TXT_1, V_NUM_TXT_2);
+  PL_SEPARAR_TEXTO_MON(V_NUM_TXT_2, 70, 40, V_NUM_TXT_2, V_NUM_TXT_3);
+
+-- FORMA NUEVA DE IMPRIMIR...
+-- funciona solo para impresoras EPSON
+
+  TOOL_ENV.GETVAR('IMP_FACTURA', V_Path_Impresora); --obtener direccion de la impresora
+  v_impresora := text_io.fopen(V_Path_Impresora, 'W'); --abrir puerto de impresora
+
+-- Se envia dos veces la misma instruccion, porque si se enciende
+-- la impresora despues de iniciado windows , entonces la primera
+-- instruccion no se ejecuta.
+
+  text_io.put(v_impresora, chr(27)||chr(120)||'0'); --establecer modo DRAFT
+
+  text_io.put(v_impresora, chr(27)||chr(64)); -- inicializar impresora
+
+  text_io.put(v_impresora, chr(27)||chr(120)||'0'); --establecer modo DRAFT
+
+  text_io.put(v_impresora, chr(27)||chr(77)); --establecer 12 cpi
+  text_io.put(v_impresora, chr(18)); --descompactar
+
+  text_io.new_line(v_impresora,8);
+
+  --tipo de factura
+  text_io.put_line(v_impresora, lpad(NAME_IN(':BDOC_ENCA.W_TIPO_FAC'),87,' '));
+
+  text_io.new_line(v_impresora,5);
+
+  --fecha y nro.de factura
+  text_io.put_line(v_impresora,
+      initcap(lpad(rtrim(to_char(TO_DATE(NAME_IN('BDOC_ENCA.DOC_FEC_DOC'),'DD/MON/YYYY'),'day')), 20, ' '))
+    ||lpad(to_char(TO_DATE(NAME_IN('BDOC_ENCA.DOC_FEC_DOC'),'DD/MON/YYYY'),'DD'), 6, ' ')
+    ||initcap(lpad(rtrim(to_char(TO_DATE(NAME_IN('BDOC_ENCA.DOC_FEC_DOC'),'DD/MON/YYYY'),'month')), 14, ' '))
+    ||lpad(to_char(TO_DATE(NAME_IN('BDOC_ENCA.DOC_FEC_DOC'),'DD/MON/YYYY'),'YYYY'), 10, ' ')
+    ||lpad(NAME_IN('BDOC_ENCA.DOC_NRO_DOC'), 33, ' ')
+  );
+
+  --nombre de cliente y ruc
+  text_io.put_line(v_impresora,
+      lpad(' ', 8, ' ')
+    ||rpad(NAME_IN('PARAMETER.P_CLI_NOM'), 41, ' ')
+    ||'('||lpad(NVL(NAME_IN('BDOC_ENCA.DOC_CLI'),' '), 8, ' ')||')'
+    ||lpad(NAME_IN('PARAMETER.P_CLI_RUC'), 23, ' ')
+    ||lpad(NAME_IN('PARAMETER.P_CLI_RUC_DV'), 2, ' ')
+  );
+
+  --direccion y telefono
+  text_io.put_line(v_impresora,
+      lpad(' ', 9, ' ')
+    ||rpad(NAME_IN('PARAMETER.P_CLI_DIR'), 41, ' ')
+    ||lpad(NAME_IN('PARAMETER.P_CLI_TEL'), 34, ' ')
+  );
+
+  --cond.de venta
+  text_io.put_line(v_impresora,lpad(NAME_IN('BDOC_ENCA.W_TIPO_FAC'),85,' '));
+ 
+  text_io.new_line(v_impresora,1); 
+
+  V_FORMATO := FL_FORMAT_MASK('BDOC_ENCA.DOC_NETO_EXEN_MON', NAME_IN('BDOC_ENCA.W_MON_DEC_IMP'));
+  V_FORMATO_LOC := FL_FORMAT_MASK('BDOC_ENCA.DOC_NETO_EXEN_LOC', NAME_IN('PARAMETER.P_CANT_DECIMALES_LOC'));
+
+  --vendedor,operador,items,cuotas 1 a 3
+  PL_MOVER_CUOTAS_A_PARAMETER(1,3);
+  V_IMP_CUO_1 := TO_NUMBER(REPLACE(NAME_IN('parameter.p_cuo_imp_mon_1'), ',' , '.'));
+  V_IMP_CUO_2 := TO_NUMBER(REPLACE(NAME_IN('parameter.p_cuo_imp_mon_2'), ',' , '.'));
+  V_IMP_CUO_3 := TO_NUMBER(REPLACE(NAME_IN('parameter.p_cuo_imp_mon_3'), ',' , '.'));
+  text_io.put_line(v_impresora,
+      chr(18) --cancelar condensado
+    ||lpad(NAME_IN('BDOC_ENCA.DOC_LEGAJO'), 12, ' ')
+    ||lpad(NAME_IN('BENCA.S_USUARIO'), 23, ' ')
+    ||lpad(NAME_IN('BDOC_ENCA.W_ITEMS'), 10, ' ')
+    || chr(15) --condensado
+    ||lpad(to_char(to_date(NAME_IN('parameter.p_cuo_fec_vto_1'),'dd-mon-yy'),'dd-mm-yy'), 18, ' ')
+    ||lpad(to_char(V_IMP_CUO_1, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(to_date(NAME_IN('parameter.p_cuo_fec_vto_2'),'dd-mon-yy'),'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_2, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(to_date(NAME_IN('parameter.p_cuo_fec_vto_3'),'dd-mon-yy'),'dd-mm-yy')
+    ||lpad(TO_CHAR(V_IMP_CUO_3, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')
+  );
+
+  --cuotas 4 a 6
+  PL_MOVER_CUOTAS_A_PARAMETER(4,6);
+  V_IMP_CUO_1 := TO_NUMBER(REPLACE(NAME_IN('parameter.p_cuo_imp_mon_1'), ',' , '.'));
+  V_IMP_CUO_2 := TO_NUMBER(REPLACE(NAME_IN('parameter.p_cuo_imp_mon_2'), ',' , '.'));
+  V_IMP_CUO_3 := TO_NUMBER(REPLACE(NAME_IN('parameter.p_cuo_imp_mon_3'), ',' , '.'));
+  text_io.put_line(v_impresora,
+      chr(15) --condensado
+    ||lpad(' ', 85, ' ') --85 espacios
+    ||to_char(to_date(NAME_IN('parameter.p_cuo_fec_vto_1'),'dd-mon-yy'),'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_1, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(to_date(NAME_IN('parameter.p_cuo_fec_vto_2'),'dd-mon-yy'),'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_2, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(to_date(NAME_IN('parameter.p_cuo_fec_vto_3'),'dd-mon-yy'),'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_3, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')
+  );
+
+  --cuotas 7 a 9
+  PL_MOVER_CUOTAS_A_PARAMETER(7,9);
+  V_IMP_CUO_1 := TO_NUMBER(REPLACE(NAME_IN('parameter.p_cuo_imp_mon_1'), ',' , '.'));
+  V_IMP_CUO_2 := TO_NUMBER(REPLACE(NAME_IN('parameter.p_cuo_imp_mon_2'), ',' , '.'));
+  V_IMP_CUO_3 := TO_NUMBER(REPLACE(NAME_IN('parameter.p_cuo_imp_mon_3'), ',' , '.'));
+  text_io.put_line(v_impresora,
+      chr(15) --condensado
+    ||lpad(' ', 85, ' ') --85 espacios
+    ||to_char(to_date(NAME_IN('parameter.p_cuo_fec_vto_1'),'dd-mon-yy'),'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_1, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(to_date(NAME_IN('parameter.p_cuo_fec_vto_2'),'dd-mon-yy'),'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_2, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(to_date(NAME_IN('parameter.p_cuo_fec_vto_3'),'dd-mon-yy'),'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_3, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')
+  );
+
+  --cuotas 10 a 12
+  PL_MOVER_CUOTAS_A_PARAMETER(10,12);
+  V_IMP_CUO_1 := TO_NUMBER(REPLACE(NAME_IN('parameter.p_cuo_imp_mon_1'), ',' , '.'));
+  V_IMP_CUO_2 := TO_NUMBER(REPLACE(NAME_IN('parameter.p_cuo_imp_mon_2'), ',' , '.'));
+  V_IMP_CUO_3 := TO_NUMBER(REPLACE(NAME_IN('parameter.p_cuo_imp_mon_3'), ',' , '.'));
+  text_io.put_line(v_impresora,
+      chr(15) --condensado
+    ||lpad(' ', 85, ' ') --85 espacios
+    ||to_char(to_date(NAME_IN('parameter.p_cuo_fec_vto_1'),'dd-mon-yy'),'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_1, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(to_date(NAME_IN('parameter.p_cuo_fec_vto_2'),'dd-mon-yy'),'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_2, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')||' '
+    ||to_char(to_date(NAME_IN('parameter.p_cuo_fec_vto_3'),'dd-mon-yy'),'dd-mm-yy')
+    ||lpad(to_char(V_IMP_CUO_3, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')
+  );
+
+  --articulos
+  text_io.put_line(v_impresora, chr(18)||chr(10)); --descompactar y saltar + 1 linea
+
+  V_FORMATO := FL_FORMAT_MASK('BDOC_DET.DET_NETO_MON', NAME_IN('BDOC_ENCA.W_MON_DEC_IMP'));
+  GO_BLOCK('BDOC_DET');
+  FIRST_RECORD;
+  LOOP
+    IF NAME_IN(':BDOC_DET.S_DESC_LARGA') IS NULL 
+      OR (NAME_IN(':BDOC_DET.S_DESC_LARGA') IS NOT NULL AND
+          NAME_IN(':BDOC_DET.S_OPCION') = 'A')
+      OR NVL(LENGTH(NAME_IN(':BDOC_DET.S_DESC_LARGA')), 0)=0 THEN
+-- si no escribio nada, o si es un articulo, le asignamos la
+-- descripcion del articulo. 
+      V_DESC_LARGA := NAME_IN('BDOC_DET.ART_DESC');
+    ELSE
+      V_DESC_LARGA := NAME_IN('BDOC_DET.S_DESC_LARGA');
+    END IF;
+
+    PL_SEPARAR_TEXTO(V_DESC_LARGA,V_ART_DESC_1,V_LINEAS,
+                     V_MAX_RENGLON,V_TABULADOR,V_MAX_TOPE_PALABRA);
+BREAK;
+    IF NVL(REPLACE(NAME_IN(':BDOC_DET.DET_IVA_MON'), ',' , '.'),0) > 0 THEN
+      V_IMP_GRAV := TO_NUMBER(REPLACE(NAME_IN(':BDOC_DET.DET_NETO_MON'), ',' , '.' ));
+      V_IMP_EXEN := NULL;
+    ELSE
+      V_IMP_EXEN := TO_NUMBER(REPLACE(NAME_IN(':BDOC_DET.DET_NETO_MON'), ',' , '.' ));
+      V_IMP_GRAV := NULL;
+    END IF;
+    V_PRECIO := TO_NUMBER(REPLACE(NAME_IN('BDOC_DET.DET_NETO_MON'), ',' , '.'));
+    text_io.put_line(v_impresora,
+        lpad(' ',13,' ')
+      ||lpad(' ', 11, ' ')
+      ||lpad(' ', 2, ' ')||' '
+      ||V_ART_DESC_1
+      ||lpad(nvl(to_char(V_PRECIO, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 12, ' ')
+      ||lpad(nvl(to_char(V_IMP_EXEN, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 13, ' ')
+      ||lpad(nvl(to_char(V_IMP_GRAV, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 13, ' ')
+    );
+    EXIT WHEN NAME_IN('SYSTEM.LAST_RECORD') = 'TRUE';
+    NEXT_RECORD;
+  END LOOP;
+  --dejar en blanco el resto de las lineas
+  IF V_LINEAS < V_MAX_LINEAS THEN
+    FOR I IN V_LINEAS+1..V_MAX_LINEAS LOOP
+      text_io.put_line(v_impresora, ' ');
+    END LOOP;
+  END IF;
+
+  --total exento y gravado
+  text_io.put_line(v_impresora, ' '); --dejar en blanco una linea
+  text_io.put_line(v_impresora,
+      lpad(' ', 69, ' ')
+    ||lpad(nvl(to_char(V_NETO_EXEN_MON, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 13, ' ')
+    ||lpad(nvl(to_char(V_NETO_GRAV_MON, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 13, ' ')
+  );
+
+  --total factura en letras y numero
+  text_io.put_line(v_impresora, ' '); --dejar en blanco una linea
+  text_io.put_line(v_impresora,
+      lpad(' ', 13, ' ')
+    ||rpad(rtrim(V_NUM_TXT_1), 69, ' ')
+    ||lpad(nvl(to_char(V_TOT_MON, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 13, ' ')
+  );
+
+
+  --total iva
+  text_io.put_line(v_impresora, ' '); --dejar en blanco una linea
+  text_io.put_line(v_impresora,
+      lpad(' ', 82, ' ')
+    ||lpad(nvl(to_char(V_IVA_MON, V_FORMATO, 'NLS_NUMERIC_CHARACTERS = '',.'''), ' '), 13, ' ')
+  );
+
+  --total factura en letras (2da. linea)
+  text_io.put_line(v_impresora,
+      lpad(' ', 13, ' ')
+    ||rtrim(V_NUM_TXT_2)
+  );
+
+  --total factura en letras (3ra. linea)
+  text_io.put_line(v_impresora,
+      lpad(' ', 13, ' ')
+    ||rtrim(V_NUM_TXT_3)
+  );
+
+  --6 saltos de linea
+  text_io.put_line(v_impresora, chr(10)||chr(10)||chr(10)||chr(10)||chr(10));
+
+  --el total en moneda local si es factura contado para evitar
+  --el calculo al cajero
+  IF   NAME_IN('BDOC_ENCA.W_TIPO_FAC') = 'CONTADO'
+   AND NAME_IN('BDOC_ENCA.DOC_MON') <> NAME_IN('PARAMETER.P_MON_LOC')
+  THEN
+    text_io.put_line(v_impresora, 
+         lpad(' ', 82, ' ')
+       ||lpad(to_char((V_TOT_LOC), V_FORMATO_LOC, 'NLS_NUMERIC_CHARACTERS = '',.'''), 13, ' ')
+    );
+  ELSE
+    text_io.put_line(v_impresora, ' ');
+  END IF;
+ 
+  --mensaje de pie de factura
+  PL_SEPARAR_TEXTO(NAME_IN('BDOC_ENCA.MEN_MENSAJE_DESC'),V_MENSAJE,V_LINEAS,
+                     90,1,V_MAX_TOPE_PALABRA);
+
+  text_io.put_line(v_impresora,chr(10)||chr(10)||V_MENSAJE);
+
+  --salto de pagina, inicializar impresora, cerrar impresora
+  text_io.put(v_impresora, chr(12)); --LF,FF
+  text_io.put(v_impresora, chr(27)||chr(64)); --ESC @ (inicializar impresora)
+  text_io.fclose(v_Impresora); --cerrar impresora
+
+EXCEPTION
+  WHEN ImpresoraNoRegistrada THEN
+    SET_ALERT_PROPERTY('AL_MESSAGE',ALERT_MESSAGE_TEXT,'Falta registrar IMP_FACTURA en el Register de Windows!');
+    V_ALERT := SHOW_ALERT('AL_MESSAGE');
+    CLEAR_FORM(NO_VALIDATE, FULL_ROLLBACK);
+    EXIT_FORM;
+END;
+
+
+PROCEDURE PL_MOVER_CUOTAS_A_PARAMETER(CuoIni IN NUMBER,
+                                      CuoFin IN NUMBER) IS
+  V_IMPORTE NUMBER;
+BEGIN
+  GO_BLOCK('BCUO');
+  FIRST_RECORD;
+  COPY(NULL,'PARAMETER.P_CUO_FEC_VTO_1');
+  COPY(NULL,'PARAMETER.P_CUO_FEC_VTO_2');
+  COPY(NULL,'PARAMETER.P_CUO_FEC_VTO_3');
+  COPY(NULL,'PARAMETER.P_CUO_IMP_MON_1');
+  COPY(NULL,'PARAMETER.P_CUO_IMP_MON_2');
+  COPY(NULL,'PARAMETER.P_CUO_IMP_MON_3');
+  LOOP
+    IF NAME_IN('SYSTEM.CURSOR_RECORD') = CuoIni THEN
+      COPY(NAME_IN('BCUO.CUO_FEC_VTO'),'PARAMETER.P_CUO_FEC_VTO_1');
+      COPY(NAME_IN('BCUO.CUO_IMP_MON'),'PARAMETER.P_CUO_IMP_MON_1');
+      
+    END IF;
+    IF NAME_IN('SYSTEM.CURSOR_RECORD') > CuoIni
+     AND NAME_IN('SYSTEM.CURSOR_RECORD') < CuoFin THEN
+      COPY(NAME_IN('BCUO.CUO_FEC_VTO'),'PARAMETER.P_CUO_FEC_VTO_2');
+      COPY(NAME_IN('BCUO.CUO_IMP_MON'),'PARAMETER.P_CUO_IMP_MON_2');
+    END IF;
+    IF NAME_IN('SYSTEM.CURSOR_RECORD') = CuoFin THEN
+      COPY(NAME_IN('BCUO.CUO_FEC_VTO') ,'PARAMETER.P_CUO_FEC_VTO_3');
+      COPY(NAME_IN('BCUO.CUO_IMP_MON'),'PARAMETER.P_CUO_IMP_MON_3');
+    END IF;
+    EXIT WHEN NAME_IN('SYSTEM.LAST_RECORD') = 'TRUE';
+    NEXT_RECORD;
+  END LOOP;
+END;
+
+PROCEDURE PL_SEPARAR_TEXTO (V_TEXTO            IN     VARCHAR2,
+                            V_TEXTO_1         OUT     VARCHAR2,
+                            V_LINEAS           IN OUT NUMBER,
+                            V_MAX_RENGLON      IN     NUMBER,
+                            V_TABULADOR        IN     NUMBER,
+                            V_MAX_TOPE_PALABRA IN     NUMBER) IS
+  V_TOPE_INF     NUMBER:= 1;
+  V_TOPE_PALABRA NUMBER:= 0;
+  V_TXT VARCHAR2(1100) := REPLACE(V_TEXTO,CHR(10),'.');
+  V_TAB NUMBER:= 0;
+BEGIN
+    V_TOPE_INF := 1;
+    IF NVL(LENGTH(V_TXT), 0) <= V_MAX_RENGLON THEN
+-- si la descripcion entra completa en la primera linea.
+      V_TEXTO_1 := RPAD(V_TXT, V_MAX_RENGLON,' ');
+      V_LINEAS := V_LINEAS + 1;
+    ELSE
+      LOOP
+       -- loop que se termina cuando se llega al final de la 
+       -- descripcion.
+       -- este FOR recorre hacia atras desde el tope 
+       -- mas V_MAX_RENGLON hasta el tope  inicial.
+        FOR I IN REVERSE V_TOPE_INF..(V_TOPE_INF + 
+                                   V_MAX_RENGLON - 1) LOOP
+          IF V_TOPE_PALABRA = V_MAX_TOPE_PALABRA THEN
+           -- si la palabra es mas larga del largo permitido,
+           -- la cortamos.
+            V_TEXTO_1 :=  V_TEXTO_1|| 
+                       LPAD(' ',V_TAB,' ')||SUBSTR(V_TXT,V_TOPE_INF,
+                              V_MAX_RENGLON)||CHR(10);
+           -- el proximo tope es a partir de donde cortó 
+           -- mas V_MAX_RENGLON.
+            V_LINEAS := V_LINEAS + 1;
+            V_TAB := V_TABULADOR;
+            V_TOPE_INF := V_TOPE_INF + V_MAX_RENGLON;
+           -- sumamos una linea de impresion
+            EXIT;
+          ELSIF SUBSTR(V_TXT,I,1) = ' ' THEN
+            -- si encuentra un espacio en blanco inserta el carriage 
+            -- return.
+            V_TEXTO_1 :=  V_TEXTO_1|| 
+                       LPAD(' ',V_TAB,' ')||SUBSTR(V_TXT,V_TOPE_INF,
+                                            I - V_TOPE_INF + 1)||
+                       CHR(10);
+            -- y el proximo tope es a partir de esta posicion mas uno
+            V_TAB := V_TABULADOR;
+            V_LINEAS := V_LINEAS + 1;
+            V_TOPE_INF := I+1;
+            EXIT;
+          ELSE
+           V_TOPE_PALABRA := V_TOPE_PALABRA + 1;
+          END IF;
+        END LOOP;
+        V_TOPE_PALABRA := 0;
+        -- cuando sale del loop es porque ya recorrio una linea
+        -- y preguntamos si lo que queda es mas de una linea o no.
+        IF V_TOPE_INF >= NVL(LENGTH(V_TXT), 0) - V_MAX_RENGLON THEN
+          V_TEXTO_1 := V_TEXTO_1||LPAD(' ',V_TAB,' ')||
+                     RPAD(SUBSTR(V_TXT,V_TOPE_INF,
+                             NVL(LENGTH(V_TXT), 0) - V_TOPE_INF + 1),
+                               V_MAX_RENGLON,' ');
+         V_LINEAS := V_LINEAS + 1;
+         EXIT;
+        END IF; 
+      END LOOP;
+    END IF;
+
+END;
+
+PROCEDURE PL_SEPARAR_TEXTO_MON (V_TEXTO IN VARCHAR2,
+                            V_TOPE_SUP IN NUMBER,
+                            V_TOPE_INF IN NUMBER,
+                            V_TEXTO_1 OUT VARCHAR2,
+                            V_TEXTO_2 OUT VARCHAR2) IS
+  I INTEGER;
+  V_TXT VARCHAR2(200) := V_TEXTO;
+BEGIN
+  V_TEXTO_1 := NULL;
+  V_TEXTO_2 := NULL;
+  FOR I IN REVERSE V_TOPE_INF..V_TOPE_SUP LOOP
+    IF SUBSTR(V_TXT,I,1) = ' ' THEN
+      V_TEXTO_1 := SUBSTR(V_TXT, 1, I);
+      V_TEXTO_2 := SUBSTR(V_TXT, I+1, NVL(LENGTH(V_TXT), 0));
+      EXIT;
+    END IF;
+  END LOOP;
+  
+  IF V_TEXTO_1 IS NULL THEN
+    V_TEXTO_1 := SUBSTR(V_TXT, 1, V_TOPE_SUP);
+    V_TEXTO_2 := SUBSTR(V_TXT, V_TOPE_SUP+1, 200);
+  END IF;
+  
+END;
+
+PROCEDURE PL_VALIDAR_DESC_LARGA IS
+  V_LINEAS NUMBER:= 0;
+  V_TEXTO VARCHAR2(1100);
+  V_TOPE_INF NUMBER ;
+  V_TOPE_PALABRA  NUMBER:= 0;
+  V_DESC_LARGA VARCHAR2(1100);
+BEGIN
+  GO_BLOCK('BDOC_DET');
+  FIRST_RECORD;
+  LOOP 
+    IF NAME_IN('BDOC_DET.S_DESC_LARGA') IS NULL 
+      OR (NAME_IN('BDOC_DET.S_DESC_LARGA') IS NOT NULL AND
+          NAME_IN('BDOC_DET.S_OPCION') = 'A')
+      OR NVL(LENGTH(NAME_IN('BDOC_DET.S_DESC_LARGA')), 0)=0 THEN
+-- si no escribio nada, o si es un articulo, le asignamos la
+-- descripcion del articulo. 
+      V_DESC_LARGA := SUBSTR(NAME_IN('BDOC_DET.ART_DESC'),1,40);
+    ELSE
+      V_DESC_LARGA := NAME_IN('BDOC_DET.S_DESC_LARGA');
+    END IF;
+
+    PL_SEPARAR_TEXTO(V_DESC_LARGA,V_TEXTO,V_LINEAS,
+                     30,27, 5);
+
+    IF NAME_IN('SYSTEM.LAST_RECORD') = 'TRUE' THEN
+      EXIT;
+    END IF;
+    NEXT_RECORD;
+ 
+  END LOOP;
+-- si conto mas lineas de lo permitido entrara aqui.  
+  IF V_LINEAS > 18 THEN
+    PL_EXHIBIR_ERROR('La(s) descripcion(es) supera el maximo de lineas permitido para imprimir!.');
+  END IF;  
+
+-- Validar que el mensaje no supere el maximo de lineas definido en 
+-- :parameter.p_max_lineas_mensaje
+  V_LINEAS := 0;
+  V_TEXTO := NULL;
+  PL_SEPARAR_TEXTO(NAME_IN('BDOC_ENCA.MEN_MENSAJE_DESC'),
+                            V_TEXTO,V_LINEAS,90,1,5);
+  IF V_LINEAS > 3 THEN
+    PL_EXHIBIR_ERROR('El mensaje supera el maximo de '||
+                     TO_CHAR(V_LINEAS)||' lineas permitido para imprimir!.');
+  END IF;   
+
+END;
+
+PROCEDURE PL_VALIDAR_MAX_ITEMS IS
+  V_MAX_ITEMS NUMBER :=9;
+BEGIN
+  IF  NAME_IN('BDOC_DET.S_ITEM') > V_MAX_ITEMS THEN
+    PL_EXHIBIR_ERROR('Solo pueden introducirse '||TO_CHAR(V_MAX_ITEMS)||' items!.');
+  END IF;
+
+END;
